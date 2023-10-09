@@ -226,7 +226,6 @@ bar {
 
 # always floating
 for_window [class="Gedit"]          floating enable
-for_window [class="Teamspeak3"]     floating enable
 
 # 0px Border
 for_window [class="chrome"]         border none

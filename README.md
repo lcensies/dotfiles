@@ -1,8 +1,8 @@
-# dotfiles
+# Dotfiles
 
 Less is more. This repo contains all my dotfiles for frequently used software.
 
-# how to manage
+# How to manage
 
 Personally I use [rcm](https://robots.thoughtbot.com/rcm-for-rc-files-in-dotfiles-repos) to keep my dotfiles in sync but this repo does not depend on anything.
 
