@@ -52,5 +52,9 @@ compinit
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # Aliases
-
 [[ -f ~/.aliases ]] && source ~/.aliases
+
+# Moving around words with ctrl + Arrow
+# TODO also add vim-like shortcuts
+bindkey "^[[1;5C" forward-word
+bindkey "^[[1;5D" backward-word
