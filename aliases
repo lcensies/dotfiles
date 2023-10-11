@@ -1,0 +1,41 @@
+# Git
+alias g="git"
+alias gc="git commit"
+alias ga="git add"
+alias gitlabci="git add .gitlab-ci.yml && git commit -m 'Updated
+.gitlab-ci.yml' && git push"
+
+# Copy stdin to the clipboard
+alias xc="xclip -selection clipboard"
+
+alias nv="nvim"
+
+# Wireguard
+alias wgup="sudo wg-quick up"
+alias wgdw="sudo wg-quick down"
+
+# Docker
+alias d="docker"
+alias dc="docker-compose"
+alias dcup="docker-compose up"
+alias dcupd="docker-compose up -d"
+alias dcdw="docker-compose down"
+
+# Terraform
+alias tf="terraform"
+alias tfa="terraform apply -auto-approve"
+alias tfp="terraform plan"
+alias tfd="terraform destroy"
+
+# Kubernetes
+alias k="kubectl"
+
+
+# Vagrant
+alias vg="vagrant"
+alias vgssh="vagrant ssh"
+alias vgup="vagrant up"
+alias vgupp="vagrant up --provision"
+alias vgupnp="vagrant up --no-provision"
+alias vgh="vagrant halt"
+alias vgd="vagrant destroy"

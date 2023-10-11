@@ -50,3 +50,7 @@ compinit
 
 # End of lines added by compinstall
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+
+# Aliases
+
+[[ -f ~/.aliases ]] && source ~/.aliases
