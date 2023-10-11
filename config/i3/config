@@ -15,7 +15,7 @@
 # font
 #set $font "pango:DejaVu Sans Mono for Powerline 10"
 #set $font "pango:Source Code Pro for Powerline 10"
-set $font "pango:IBM Plex Mono, FontAwesome 6 Free 11"
+set $font "pango:JetBrains Mono 11"
 font $font
 exec --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
 
@@ -51,7 +51,7 @@ bindsym XF86WebCam              exec --no-startup-id "cheese"
 # screenshot
 bindsym $mod+F4                 exec --no-startup-id "gnome-screenshot -w"
 # start dmenu-launcher
-bindsym $mod+d                  exec --no-startup-id rofi -show drun -theme gruvbox-dark-soft -font "mono 10"
+bindsym $mod+space              exec --no-startup-id rofi -show drun -theme gruvbox-dark-soft -font "mono 10"
 # lock i3 with i3lock
 bindsym $mod+Shift+x            exec --no-startup-id i3lock -c 000000
 
@@ -85,10 +85,10 @@ bindsym $mod+Shift+Up           move up
 bindsym $mod+Shift+Right        move right
 
 # split in horizontal orientation
-bindsym $mod+h                  split h ; exec --no-startup-id xdotool key --clearmodifiers Super+Enter
+bindsym $mod+v                  split h
 
 # split in vertical orientation
-bindsym $mod+v                  split v ; exec --no-startup-id xdotool key --clearmodifiers Super+Enter
+bindsym $mod+c                  split v
 
 # enter fullscreen mode for the focused container
 bindsym $mod+f                  fullscreen
@@ -247,6 +247,6 @@ exec --no-startup-id xset b off
 # wallpaper
 exec --no-startup-id feh --bg-fill ~/.config/wallpapers/gentoo.jpg
 # syncthing
-exec --no-startup-id syncthing --no-browser
+# exec --no-startup-id syncthing --no-browser
 # use lockscreen as screensaver (needs xss-lock installed)
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
