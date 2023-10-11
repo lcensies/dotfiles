@@ -237,7 +237,7 @@ for_window [class="firefox"]        border none
 #############################################
 
 # composite manager
-exec --no-startup-id picom -b --config ~/.config/picom.conf
+exec --no-startup-id picom -b --config ~/.config/picom/picom.conf
 # less eye pain
 exec --no-startup-id redshift -l 46.95:7.45 -t 6500:3000
 # start notification daemon
