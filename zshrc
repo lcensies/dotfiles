@@ -43,7 +43,8 @@ zstyle ':completion:*' menu select
 
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
-zstyle :compinstall filename '/home/aaron/.zshrc'
+# TODO: parametrize user name
+zstyle :compinstall filename '/home/esc2/.zshrc'
 
 autoload -Uz compinit
 compinit
@@ -56,5 +57,7 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # Moving around words with ctrl + Arrow
 # TODO also add vim-like shortcuts
+# Other alternative is to set it in the Alacritty
+# See https://github.com/alacritty/alacritty/issues/1408
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
