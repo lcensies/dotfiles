@@ -252,3 +252,9 @@ exec --no-startup-id feh --bg-fill ~/.config/wallpapers/arch-yellow-liquid.png
 # exec --no-startup-id syncthing --no-browser
 # use lockscreen as screensaver (needs xss-lock installed)
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
+
+# Activate features like shared clipboard
+# and window server specific optimizations
+# for the virtualbox guest
+# TODO: move to the VBox VM branch
+exec --no-startup-id /usr/bin/VBoxClient-all
