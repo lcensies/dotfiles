@@ -258,3 +258,4 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
 # for the virtualbox guest
 # TODO: move to the VBox VM branch
 exec --no-startup-id /usr/bin/VBoxClient-all
+exec --no-startup-id /usr/bin/VBoxClient --vmsvga-session
