@@ -61,3 +61,21 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 # See https://github.com/alacritty/alacritty/issues/1408
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
+
+
+# Start SSH agent on login
+# TODO consider enabling it on headless sessions
+# TODO consider using keychain
+# https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
+if ! pgrep -u "$USER" ssh-agent > /dev/null; then
+    ssh-agent > "$XDG_RUNTIME_DIR/ssh-agent.env"
+fi
+if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
+    source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
+fi
+
+# Autostart X server on login to get WM working without
+# typing startx each time after reboot
+if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
+  exec startx
+fi
