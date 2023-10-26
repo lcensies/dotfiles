@@ -1,0 +1,3 @@
+Include hosts.config
+
+AddKeysToAgent yes
