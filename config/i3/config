@@ -264,4 +264,4 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
 # TODO: move to the VBox VM branch
 exec --no-startup-id /usr/bin/VBoxClient-all
 # https://superuser.com/questions/1403123/what-are-differences-between-vboxvga-vmsvga-and-vboxsvga-in-virtualbox
-exec --no-startup-id /usr/bin/VBoxClient --vmsvga-session
+# exec --no-startup-id /usr/bin/VBoxClient --vmsvga-session
