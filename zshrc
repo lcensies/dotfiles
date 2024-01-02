@@ -1,5 +1,5 @@
 # Dont try to display a fancy theme in a tty
-if [[ $TERM == "linux" ]] || [[ $TERM == "screen" ]]; then
+if [[ $TERM == "linux" ]]; then
   [[ ! -f ~/.p10k-portable.zsh ]] || source ~/.p10k-portable.zsh
 else
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -79,3 +79,9 @@ fi
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   exec startx
 fi
+
+# Enter tmux if it's present
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  exec tmux
+fi
+
