@@ -125,8 +125,6 @@ bindsym $mod+r                  mode "resize"
 bindsym $mod+y                  scratchpad show
 bindsym $mod+x                  move scratchpad
 
-# flameshot
-bindsym Control+Mod1+p              exec --no-startup-id flameshot gui
 
 # Use pactl to adjust volume in PulseAudio.
 bindsym XF86AudioRaiseVolume    exec --no-startup-id pactl set-sink-volume @DEFAULT_SINK@ +1%
