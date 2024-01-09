@@ -1,0 +1,2 @@
+#!/bin/sh
+termdown $1m && play ~/Music/alarm-clock-short.mp3 2>/dev/null 

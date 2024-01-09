@@ -1,0 +1,30 @@
+#!/usr/bin/sh
+
+# Decodes base64 pem certificate
+
+decode_base64_pem() {
+  if [ -z "$1" ]; then
+    echo "Usage: decode_base64_pem <base64_pem_file>"
+    return 1
+  fi
+
+  base64_pem_file="$1"
+
+  if [ ! -f "$base64_pem_file" ]; then
+    echo "File not found: $base64_pem_file"
+    return 1
+  fi
+
+  decoded_pem_file="${base64_pem_file%.base64}.pem"
+
+  # Decode the Base64-encoded PEM certificate
+  base64 -d -i "$base64_pem_file" > "$decoded_pem_file"
+
+  if [ $? -eq 0 ]; then
+    echo "Certificate successfully decoded and saved to $decoded_pem_file"
+  else
+    echo "Failed to decode the certificate"
+  fi
+}
+
+decode_base64_pem $1

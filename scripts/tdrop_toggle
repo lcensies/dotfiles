@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# WARNING: fix for tiling WMs is needed
+# Turns arbitrary terminal emulator to dropdown
+
+EMULATOR="kitty"
+
+[ -z $(pidof "${EMULATOR}") ] && $(tdrop -h 75% -ma -s dropdown --class=tdrop "${EMULATOR}") && exit
+
+KITTY_WINDOW=$(xdotool search --pid $(pidof kitty || echo -1))
+FOCUS_WINDOW=$(xdotool getactivewindow getwindowpid)
+
+echo "Kitty window: ${KITTY_WINDOW}"
+echo "Focus window: ${FOCUS_WINDOW}"
+
+case "$(xdotool getactivewindow getwindowname)" in 
+	"bash"|"zsh"|"${EMULATOR}")
+		echo "Terminal is focused"
+		xdotool getactivewindow windowminimize
+	;;
+	*)
+		echo "Other window is focused"
+		#xdotool windowactivate "${KITTY_WINDOW}"
+		wmctrl -x -R "${EMULATOR}"
+
+	;;
+esac

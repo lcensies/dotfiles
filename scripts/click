@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Performs left mouse button click. 
+
+xdotool click 1 # left click
