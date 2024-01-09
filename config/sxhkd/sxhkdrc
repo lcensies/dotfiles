@@ -1,2 +1,10 @@
+# Hide / show dropdown terminal
 alt + space
 	~/.scripts/tdrop_toggle
+
+control + alt + p
+	flameshot gui
+
+# Simulate left mouse button click
+alt + c
+	~/.scripts/click
