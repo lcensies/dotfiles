@@ -1,7 +1,14 @@
+set cident
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 set nocompatible
-set encoding=utf-8
+set encoding=UTF-8
 
 filetype plugin indent on
+
+# "Enter in line"
+noremap o e
+noremap E O
 
 " Pluigin installation using vim-plug "
 call plug#begin('~/.vim/plugged')
@@ -10,7 +17,8 @@ call plug#begin('~/.vim/plugged')
   Plug 'vim-airline/vim-airline'
   Plug 'vim-airline/vim-airline-themes'
   Plug 'Yggdroot/indentLine'
-  Plug 'davidhalter/jedi-vim'
+  "Plug 'davidhalter/jedi-vim'
+  Plug 'tpope/vim-surround'
 "  Plug 'scrooloose/syntastic'
 "  Plug 'dense-analysis/ale'
 call plug#end()
