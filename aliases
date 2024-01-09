@@ -1,4 +1,15 @@
+alias l="ls -l"
+alias lf="ls | fzf"
+
+
+# TODO change xdg-open to mimeo 
+# TODO integration with fasd / zoxide
+alias open="xdg-open"
+alias o='xdg-open'
+
+
 # Git
+alias lg="lazygit"
 alias g="git"
 alias gc="git commit"
 alias ga="git add"
@@ -8,6 +19,8 @@ alias gitlabci="git add .gitlab-ci.yml && git commit -m 'Updated
 # Copy stdin to the clipboard
 alias xc="xclip -selection clipboard"
 
+alias v="vim"
+alias vim="nvim"
 alias nv="nvim"
 
 # Wireguard
