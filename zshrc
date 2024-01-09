@@ -33,7 +33,7 @@ bindkey -e
 HIST_IGNORE_DUPS="true"
 HIST_STAMPS="mm/dd/yyyy"
 HISTFILE=~/.zsh_history
-HISTSIZE=999999999
+HISTSIZE=999999
 SAVEHIST=$HISTSIZE
 setopt SHARE_HISTORY
 
@@ -54,6 +54,9 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # Aliases
 [[ -f ~/.aliases ]] && source ~/.aliases
+
+# Scripts
+test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
 
 # Moving around words with ctrl + Arrow
 # TODO also add vim-like shortcuts
@@ -80,8 +83,39 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   exec startx
 fi
 
+
+
+
+# Configure tmux prompt
+# Not necesarry anymore due to plugin
+# TODO: remove
+# https://that.guru/blog/automatically-set-tmux-window-name/
+case "$TERM" in
+linux|xterm*|rxvt*)
+  export PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}: ${PWD##*/}\007"'
+  ;;
+screen*)
+  export PROMPT_COMMAND='echo -ne "\033k${HOSTNAME%%.*}: ${PWD##*/}\033\\" '
+  ;;
+*)
+  ;;
+esac
+
+# Plugin rename-window requires customization
+# tmux-window-name() {
+# 	($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.py &)
+# }
+
 # Enter tmux if it's present
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  # Set hook for windows renaming
+  #add-zsh-hook chpwd tmux-window-name
   exec tmux
 fi
 
+# Initialize zoxide
+which zoxide >/dev/null && eval "$(zoxide init --cmd j zsh)"
+
+# Source fzf completions
+source /usr/share/fzf/key-bindings.zsh 2>/dev/null
+source /usr/share/fzf/completion.zsh 2>/dev/null
