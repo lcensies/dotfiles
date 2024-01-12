@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# https://stackoverflow.com/questions/3042437/how-can-i-change-the-commit-author-for-a-single-commit
+
+ git commit --amend --author="$1" --no-edit

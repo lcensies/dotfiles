@@ -1,0 +1,7 @@
+#!/bin/bash
+
+# Jump to directory and open codium
+
+eval "$(zoxide init bash)"  
+
+z "$1" && codium

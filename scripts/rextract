@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Copies contents of the $1 directory to $2
+# Assuming that they have same subfolders
+
+rsync -avP  "${1}/*" "$2"

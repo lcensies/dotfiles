@@ -1,0 +1,6 @@
+#!/bin/bash
+
+# Displays files managed by package
+# TODO: add pacman support
+
+which dpkg 2>/dev/null && dpkg -L $1
