@@ -110,7 +110,9 @@ esac
 if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
   # Set hook for windows renaming
   #add-zsh-hook chpwd tmux-window-name
-  exec tmux
+  # exec tmux
+  # https://www.reddit.com/r/tmux/comments/s5hpdz/how_to_prevent_tmux_from_creating_a_new_session/
+  exec tmux new-session -A -s local
 fi
 
 # Initialize zoxide

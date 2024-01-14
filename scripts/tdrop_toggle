@@ -5,7 +5,7 @@
 
 EMULATOR="kitty"
 
-[ -z $(pidof "${EMULATOR}") ] && $(tdrop -h 75% -ma -s dropdown --class=tdrop "${EMULATOR}") && exit
+[ -z $(pidof "${EMULATOR}") ] && $(tdrop -h 75% -ma -s local --class=tdrop "${EMULATOR}") && exit
 
 KITTY_WINDOW=$(xdotool search --pid $(pidof kitty || echo -1))
 FOCUS_WINDOW=$(xdotool getactivewindow getwindowpid)
