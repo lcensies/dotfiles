@@ -53,7 +53,7 @@ bindsym XF86WebCam              exec --no-startup-id "cheese"
 # screenshot
 bindsym $mod+F4                 exec --no-startup-id "gnome-screenshot -w"
 # start dmenu-launcher
-bindsym $mod+space              exec --no-startup-id rofi -show drun -theme gruvbox-dark-soft -font "mono 10"
+bindsym $mod+space              exec --no-startup-id   rofi -show combi -modes combi -combi-modes "window,drun,run" -theme gruvbox-dark-soft -font "mono 10"
 # lock i3 with i3lock
 bindsym $mod+Shift+x            exec --no-startup-id i3lock -c 000000
 
