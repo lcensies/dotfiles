@@ -256,6 +256,10 @@ exec --no-startup-id feh --bg-fill ~/.config/wallpapers/arch-yellow-liquid.png
 # use lockscreen as screensaver (needs xss-lock installed)
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
 
+
+# Hotkey daemon
+exec --no-startup-id "sxhkd &"
+
 # Activate features like shared clipboard
 # and window server specific optimizations
 # for the virtualbox guest
@@ -263,3 +267,4 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
 exec --no-startup-id /usr/bin/VBoxClient-all
 # https://superuser.com/questions/1403123/what-are-differences-between-vboxvga-vmsvga-and-vboxsvga-in-virtualbox
 # exec --no-startup-id /usr/bin/VBoxClient --vmsvga-session
+
