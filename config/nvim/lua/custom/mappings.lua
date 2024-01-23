@@ -7,6 +7,14 @@ M.disabled = {
     ["<S-k>"] = "",
     -- Rename
     ["<leader>ra"] = "",
+
+    -- switch between windows
+    -- Mappings are delegated to the tmux-vim-navigator
+    -- TODO: refactor plugin config
+    ["<C-h>"] = "",
+    ["<C-l>"] = "",
+    ["<C-j>"] = "",
+    ["<C-k>"] = "",
   },
 }
 
