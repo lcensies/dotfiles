@@ -48,12 +48,8 @@ smart_gaps on
 # display brightness management (laptop)
 bindsym XF86MonBrightnessUp     exec --no-startup-id "xbacklight +10"
 bindsym XF86MonBrightnessDown   exec --no-startup-id "xbacklight -10"
-# webcam
-bindsym XF86WebCam              exec --no-startup-id "cheese"
-# screenshot
-bindsym $mod+F4                 exec --no-startup-id "gnome-screenshot -w"
 # start dmenu-launcher
-bindsym $mod+space              exec --no-startup-id   rofi -show combi -modes combi -combi-modes "window,drun,run" -theme gruvbox-dark-soft -font "mono 10"
+bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' -theme gruvbox-dark-soft -font 'mono 10'"
 # lock i3 with i3lock
 bindsym $mod+Shift+x            exec --no-startup-id i3lock -c 000000
 
@@ -257,7 +253,6 @@ exec --no-startup-id feh --bg-fill ~/.config/wallpapers/arch-yellow-liquid.png
 exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
 
 
-# Hotkey daemon
 exec --no-startup-id "sxhkd &"
 
 # Activate features like shared clipboard
