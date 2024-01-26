@@ -12,10 +12,10 @@ lspconfig.clangd.setup {
   capabilities = capabilities,
 }
 
-lspconfig["ansiblels"].setup {
-  filetypes = { "yaml", "yml", "ansible" },
-  root_dir = lspconfig.util.root_pattern("roles", "playbooks"),
-}
+-- lspconfig["ansiblels"].setup {
+--   filetypes = { "yaml", "yml", "ansible" },
+--   root_dir = lspconfig.util.root_pattern("roles", "playbooks"),
+-- }
 
 lspconfig.gopls.setup {
   on_attach = on_attach,
@@ -47,3 +47,5 @@ lspconfig.rust_analyzer.setup {
     },
   },
 }
+
+return lspconfig

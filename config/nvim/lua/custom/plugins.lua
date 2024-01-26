@@ -72,8 +72,8 @@ local plugins = {
         "stylua",
         "luacheck",
 
-        "ansible-language-server",
-        "ansible-lint",
+        -- "ansible-language-server",
+        -- "ansible-lint",
 
         "yamlfix",
         -- "yamlfmt",
@@ -90,6 +90,9 @@ local plugins = {
   {
     "ThePrimeagen/harpoon",
     event = "VeryLazy",
+    config = function(_, opts)
+      require("core.utils").load_mappings "harpoon"
+    end,
   },
   {
     -- Required by harpoon
@@ -147,12 +150,81 @@ local plugins = {
       "TmuxNavigatePrevious",
     },
     keys = {
-      { "<c-h>",  "<cmd><C-U>TmuxNavigateLeft<cr>" },
-      { "<c-j>",  "<cmd><C-U>TmuxNavigateDown<cr>" },
-      { "<c-k>",  "<cmd><C-U>TmuxNavigateUp<cr>" },
-      { "<c-l>",  "<cmd><C-U>TmuxNavigateRight<cr>" },
+      { "<c-h>", "<cmd><C-U>TmuxNavigateLeft<cr>" },
+      { "<c-j>", "<cmd><C-U>TmuxNavigateDown<cr>" },
+      { "<c-k>", "<cmd><C-U>TmuxNavigateUp<cr>" },
+      { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
       { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
     },
+  },
+  {
+    "folke/trouble.nvim",
+    event = "VeryLazy",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+    config = function(_, opts)
+      require("core.utils").load_mappings "trouble"
+    end,
+  },
+  {
+    "nvim-telescope/telescope.nvim",
+    opts = {
+      extensions_list = { "harpoon" },
+    },
+  },
+  {
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    -- cmd = { "ConformInfo" },
+    opts = {
+      lsp_fallback = true,
+      format_on_save = { timeout_ms = 500, lsp_fallback = true },
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "isort", "black" },
+        go = { "gofumpt", "goimports-reviser", "golines" },
+        cpp = { "clang_format" },
+        c = { "clang_format" },
+        yaml = { "yamlfix" },
+        sh = { "shfmt" },
+      },
+      formatters = {
+        yamlfix = {
+          env = {
+            YAMLFIX_SEQUENCE_STYLE = "block_style",
+          },
+        },
+      },
+      init = function()
+        -- If you want the formatexpr, here is the place to set it
+        vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+      end,
+    },
+    -- config = function(_, opts)
+    --   require("conform").setup({
+    --     format_on_save = {
+    --       -- These options will be passed to conform.format()
+    --       timeout_ms = 500,
+    --       lsp_fallback = true,
+    --     },
+    --     formatters_by_ft = {
+    --       lua = { "stylua" },
+    --       -- Conform will run multiple formatters sequentially
+    --       python = { "isort", "black" },
+    --       -- Use a sub-list to run only the first available formatter
+    --       yaml = { "yamlfix "},
+    --
+    --       go = { "gofumpt" },
+    --
+    --       c = { "clang_format" },
+    --       cpp = { "clang_format "},
+    --     },
+    --   })
+    -- end,
   },
 }
 return plugins

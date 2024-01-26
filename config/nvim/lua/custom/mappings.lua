@@ -7,7 +7,9 @@ M.disabled = {
     ["<S-k>"] = "",
     -- Rename
     ["<leader>ra"] = "",
-
+    ["<leader>q"] = "",
+    -- Marks are replaced with harpoon marks
+    ["<leader>ma"] = "",
     -- switch between windows
     -- Mappings are delegated to the tmux-vim-navigator
     -- TODO: refactor plugin config
@@ -18,14 +20,34 @@ M.disabled = {
   },
 }
 
+M.telescope = {
+  plugin = true,
+  n = {
+    ["<leader>fm"] = {
+      "<cmd> Telescope harpoon marks <CR>",
+      "Find Harpoon marks",
+    },
+  },
+  v = {
+    ["<leader>fs"] = {
+      "<cmd> lua require'telescope.builtin'.grep_string({search = vim.fn.expand('<cword>')}) <CR>",
+      "Find selection",
+    },
+  },
+}
+
+-- Telescope harpoon marks
 M.harpoon = {
   plugin = true,
   n = {
-    ["<leader><S-h>a"] = {
-      '<cmd> lua require("harpoon.mark").add_file()',
+    ["<leader>a"] = {
+      '<cmd> lua require("harpoon.mark").add_file() <CR>',
+      "Harpoon add file",
     },
-    ["<leader><S-h>t"] = {
-      'lua require("harpoon.ui").toggle_quick_menu()',
+    -- fr aka find recent
+    ["<leader>fr"] = {
+      '<cmd> lua require("harpoon.ui").toggle_quick_menu() <CR>',
+      "Harpoon toggle menu",
     },
   },
 }
@@ -130,6 +152,17 @@ M.crates = {
         require("crates").upgrade_all_crates()
       end,
       "update crates",
+    },
+  },
+}
+
+M.trouble = {
+  plugin = true,
+  n = {
+    ["<leader>T"] = {
+      function()
+        require("trouble").toggle "document_diagnostics"
+      end,
     },
   },
 }
