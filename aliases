@@ -9,9 +9,10 @@ alias tx="tmuxinator"
 alias open="xdg-open"
 alias o='xdg-open'
 
+alias tx="tmuxinator"
+
 
 # Git
-alias lg="lazygit"
 alias g="git"
 alias gc="git commit"
 alias ga="git add"
