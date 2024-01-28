@@ -1,6 +1,8 @@
 alias l="ls -l"
 alias lf="ls | fzf"
 
+alias tx="tmuxinator"
+
 
 # TODO change xdg-open to mimeo 
 # TODO integration with fasd / zoxide
