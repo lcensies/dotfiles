@@ -19,9 +19,9 @@ alias gitlabci="git add .gitlab-ci.yml && git commit -m 'Updated
 # Copy stdin to the clipboard
 alias xc="xclip -selection clipboard"
 
-alias v="vim"
+# vim
+alias v="nvim"
 alias vim="nvim"
-alias nv="nvim"
 
 # Wireguard
 alias wgup="sudo wg-quick up"
@@ -46,6 +46,7 @@ alias k="kubectl"
 
 # Vagrant
 alias vg="vagrant"
+alias vgl="~/.scripts/vagrant_libvirt"
 alias vgssh="vagrant ssh"
 alias vgup="vagrant up"
 alias vgupp="vagrant up --provision"
