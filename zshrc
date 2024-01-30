@@ -89,6 +89,10 @@ else
     start_agent;
 fi
 
+# Kill SSH agent on logout
+# TODO: https://unix.stackexchange.com/questions/90853/how-can-i-run-ssh-add-automatically-without-a-password-prompt
+trap 'test -n "$SSH_AUTH_SOCK" && eval `/usr/bin/ssh-agent -k`' 0
+
 
 # Autostart X server on login to get WM working without
 # typing startx each time after reboot
@@ -139,6 +143,10 @@ source /usr/share/fzf/completion.zsh 2>/dev/null
 function cd {
   builtin cd "$@" && (exa -F 2>/dev/null || ls -F)
 }
+
+[[ -d ~/.antidote ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
+source ~/.antidote/antidote.zsh
+antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins 2> /dev/null
 
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   exec startx
