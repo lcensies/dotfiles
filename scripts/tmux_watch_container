@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# This bash script monitors the availability of a Docker container with a specified image. It continuously checks for the container's presence and, if it's not running, waits until it becomes available. When the container is detected, the script restarts it in a new tmux pane, ensuring a seamless recovery process within the tmux session.
+
+# TODO: parametrize session
+
+# Set the base index for tmux
+base_index=1
+
+# Function to restart container in a new tmux pane
+restart_container() {
+    tmux has-session -t test 2>/dev/null || tmux new-session -d -s test
+    tmux split-window -t test:$base_index "docker exec -it $1 /bin/sh"
+    tmux kill-pane -t test:$base_index.1
+}
+
+# Main loop
+while true; do
+    # Filter by image
+    echo "Trying to find alive container"
+    
+    # Check if container is running
+    if [[ -z $(docker ps -q --filter "ancestor=$1") ]]; then
+
+        while true; do
+          if [[ -z $(docker ps -q --filter "ancestor=$1") ]]; then
+              echo "Container is not running, waiting..."
+              sleep 1
+          else
+              echo "Container found, restarting..."
+              restart_container $1
+              break
+          fi
+        done
+
+    else
+        echo "Container is alive"
+    fi
+
+    sleep 1
+done
+
