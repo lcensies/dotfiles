@@ -49,7 +49,7 @@ smart_gaps on
 bindsym XF86MonBrightnessUp     exec --no-startup-id "xbacklight +10"
 bindsym XF86MonBrightnessDown   exec --no-startup-id "xbacklight -10"
 # start dmenu-launcher
-bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' -theme gruvbox-dark-soft -font 'mono 10'"
+bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' -theme gruvbox-dark-soft -font 'mono 10' -show-icons"
 # lock i3 with i3lock
 bindsym $mod+Shift+x            exec --no-startup-id i3lock -c 000000
 
