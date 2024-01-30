@@ -66,22 +66,28 @@ bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 
 
-# Start SSH agent on login
-# TODO consider enabling it on headless sessions
-# TODO consider using keychain
-# https://wiki.archlinux.org/title/SSH_keys#Start_ssh-agent_with_systemd_user
-# if ! pgrep -u "$USER" ssh-agent > /dev/null; then
-#     ssh-agent > "$XDG_RUNTIME_DIR/ssh-agent.env"
-# fi
-# if [[ ! -f "$SSH_AUTH_SOCK" ]]; then
-#     source "$XDG_RUNTIME_DIR/ssh-agent.env" >/dev/null
-# fi
-if [ ! -S ~/.ssh/ssh_auth_sock > /dev/null ]; then
-  eval `ssh-agent > /dev/null`
-  # ln -sf "$SSH_AUTH_SOCK" ~/.ssh/ssh_auth_sock
-fi
-# export SSH_AUTH_SOCK=~/.ssh/ssh_auth_sock
+SSH_ENV="$HOME/.ssh/agent-environment"
 
+function start_agent {
+    # echo "Initialising new SSH agent..."
+    /usr/bin/ssh-agent | sed 's/^echo/#echo/' > "${SSH_ENV}"
+    # echo succeeded
+    chmod 600 "${SSH_ENV}"
+    . "${SSH_ENV}" > /dev/null
+    /usr/bin/ssh-add;
+}
+
+# Source SSH settings, if applicable
+
+if [ -f "${SSH_ENV}" ]; then
+    . "${SSH_ENV}" > /dev/null
+    #ps ${SSH_AGENT_PID} doesn't work under cywgin
+    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
+        start_agent;
+    }
+else
+    start_agent;
+fi
 
 
 # Autostart X server on login to get WM working without
