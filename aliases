@@ -56,3 +56,6 @@ alias vgupp="vagrant up --provision"
 alias vgupnp="vagrant up --no-provision"
 alias vgh="vagrant halt"
 alias vgd="vagrant destroy"
+
+# Virtualbox
+alias vb="VBoxManage"
