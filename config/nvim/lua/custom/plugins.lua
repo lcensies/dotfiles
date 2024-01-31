@@ -84,6 +84,8 @@ local plugins = {
         "gofumpt",
 
         "rust-analyzer",
+
+        "jq",
       },
     },
   },
@@ -191,6 +193,7 @@ local plugins = {
         c = { "clang_format" },
         yaml = { "yamlfix" },
         sh = { "shfmt" },
+        json = { "jq " },
       },
       formatters = {
         yamlfix = {

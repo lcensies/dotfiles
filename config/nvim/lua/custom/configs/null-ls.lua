@@ -7,7 +7,10 @@ local opts = {
 
     -- null_ls.builtins.formatting.stylua,
     null_ls.builtins.diagnostics.luacheck,
-
+    -- For some reason, conform + jq is not working
+    null_ls.builtins.formatting.jq,
+    -- Configuration of yamlfix ig broken with yamlfix and null-ls, so I
+    -- switched to conform for formatters
     -- null_ls.builtins.formatting.yamlfmt,
     -- null_ls.builtins.formatting.yamlfix,
 
