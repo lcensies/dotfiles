@@ -4,13 +4,13 @@ alias lf="ls | fzf"
 alias tx="tmuxinator"
 
 
+
 # TODO change xdg-open to mimeo 
 # TODO integration with fasd / zoxide
 alias open="xdg-open"
 alias o='xdg-open'
 
-alias tx="tmuxinator"
-
+alias n3="nnn"
 
 # Git
 alias g="git"
