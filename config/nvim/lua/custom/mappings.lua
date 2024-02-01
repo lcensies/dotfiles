@@ -167,4 +167,18 @@ M.trouble = {
   },
 }
 
+M.git_worktree = {
+  plugin = true,
+    n = {
+    ["<leader>gwa"] = {
+      "<cmd> lua require('telescope').extensions.git_worktree.create_git_worktree() <CR>",
+      "Git worktree add",
+    },
+    ["<leader>gws"] = {
+      "<cmd> lua require('telescope').extensions.git_worktree.git_worktrees() <CR>",
+      "Git workTree switch"
+    }
+  },
+
+}
 return M

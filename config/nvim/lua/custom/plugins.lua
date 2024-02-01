@@ -95,10 +95,7 @@ local plugins = {
     config = function(_, opts)
       require("core.utils").load_mappings "harpoon"
     end,
-  },
-  {
-    -- Required by harpoon
-    "nvim-lua/plenary.nvim",
+    dependencies = { "nvim-lua/plenary.nvim" }
   },
   {
     "saecki/crates.nvim",
@@ -175,8 +172,15 @@ local plugins = {
   {
     "nvim-telescope/telescope.nvim",
     opts = {
-      extensions_list = { "harpoon" },
+      extensions_list = { 
+        "harpoon", 
+        'fzy_native',
+        'git_worktree',
+      },
     },
+    config = function(_, _)
+      require('telescope').load_extension('fzy_native')
+    end,
   },
   {
     "stevearc/conform.nvim",
@@ -207,6 +211,31 @@ local plugins = {
         vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
       end,
     },
+    -- Doesn't work well.Manual opening / zeal-cli-lync is better
+    -- {
+    --   "Xertes0/cppdoc.nvim",
+    --   event = "VeryLazy",
+    --   config = function()
+    --     require("cppdoc").setup()
+    --   end,
+    -- },
+    {
+      "ThePrimeagen/git-worktree.nvim",
+      event = "VeryLazy",
+      dependencies = {
+        'nvim-lua/plenary.nvim',
+        'nvim-lua/popup.nvim',
+        'nvim-telescope/telescope.nvim',
+        'nvim-telescope/telescope-fzy-native.nvim'
+      },
+      -- TODO: hook to update submodules on worktree checkout
+      -- See https://www.youtube.com/watch?v=2uEqYw-N8uE
+      config = function(_, _)
+        require("core.utils").load_mappings "git-worktree"
+      end,
+
+    }
+
     -- config = function(_, opts)
     --   require("conform").setup({
     --     format_on_save = {
