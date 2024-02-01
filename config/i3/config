@@ -49,7 +49,8 @@ smart_gaps on
 bindsym XF86MonBrightnessUp     exec --no-startup-id "xbacklight +10"
 bindsym XF86MonBrightnessDown   exec --no-startup-id "xbacklight -10"
 # start dmenu-launcher
-bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' -theme gruvbox-dark-soft -font 'mono 10' -show-icons"
+# TODO: ensure colors are correct
+bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' -theme ~/.config/rofi/colorblocks/launcher.rasi"
 # lock i3 with i3lock
 bindsym $mod+Shift+x            exec --no-startup-id i3lock -c 000000
 
@@ -205,6 +206,8 @@ client.urgent            $red      $bg2      $red   $bg       $red
 #                 i3-bar                    #
 #############################################
 
+# exec --no-startup-id polybar Bar
+
 bar {
     font $font
     position top
@@ -217,8 +220,15 @@ bar {
         inactive_workspace   $darkgrey  $darkgrey $grey
         active_workspace     $darkgrey  $darkgrey $grey
         urgent_workspace     $red       $darkgrey $red
-    }
+  }
 }
+
+# bar {
+#     i3bar_command $HOME/.config/polybar/launch.sh
+#  
+# #status_command i3status
+# }
+
 
 #############################################
 #            specific windows               #
