@@ -5,6 +5,18 @@ else
   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 fi
 
+export EDITOR=nvim
+export VISUAL=nvim
+
+fuzzy-xdg-open() {
+  local output
+  output=$(fzf --height 40% --reverse </dev/tty) && xdg-open ${(q-)output}
+  zle reset-prompt
+}
+
+zle -N fuzzy-xdg-open
+bindkey '^o' fuzzy-xdg-open
+
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
 # confirmations, etc.) must go above this block; everything else may go below.
@@ -58,6 +70,11 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 # Scripts
 test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
 
+export NNN_PLUG='f:finder;o:fzopen'
+# export NNN_FIFO=/tmp/nnn.fifo
+# export PATH="$PATH:/home/${USER}/nnn/plugins"
+
+#
 # Moving around words with ctrl + Arrow
 # TODO also add vim-like shortcuts
 # Other alternative is to set it in the Alacritty
@@ -74,7 +91,7 @@ function start_agent {
     echo succeeded > /dev/null
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add > /dev/null
+    /usr/bin/ssh-add >/dev/null 2>&1
 }
 
 # Source SSH settings, if applicable
@@ -83,7 +100,7 @@ if [ -f "${SSH_ENV}" ]; then
     . "${SSH_ENV}" > /dev/null
     #ps ${SSH_AGENT_PID} doesn't work under cywgin
     ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-        start_agent 
+        start_agent > /dev/null
     }
 else
     start_agent > /dev/null
