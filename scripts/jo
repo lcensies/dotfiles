@@ -1,11 +1,12 @@
-#!/bin/bash
+#!/bin/zsh
 
 # Jump to directory, search file with fzf and open it in default application
 
-eval "$(zoxide init bash)"  
+eval "$(zoxide init zsh)"  
 
 z "$1" 
 
 local output
 output=$(fzf --height 40% --reverse </dev/tty) && xdg-open ${(q-)output}
+
 

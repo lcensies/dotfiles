@@ -70,7 +70,7 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 # Scripts
 test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
 
-export NNN_PLUG='f:finder;o:fzopen;p:preview-tui'
+export NNN_PLUG='f:finder;o:fzopen;p:preview-tui;j:autojump'
 export NNN_FIFO=/tmp/nnn.fifo
 # export PATH="$PATH:/home/${USER}/nnn/plugins"
 
