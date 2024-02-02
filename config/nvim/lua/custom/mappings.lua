@@ -184,18 +184,24 @@ M.yanks = {
   }
 }
 
-M.base_maps = {
+M.motions = {
   i = {
     ["<C-c>"] = { "<Esc>", "Exit insert mode with Ctrl+c"},
   },
   v = {
     ["J"] = {":m '>+1<CR>gv=gv", "Move selection up"},
     ["K"] = {":m '<-2<CR>gv=gv", "Move selection down"},
+    ["H"] = {"^", "Go to the beginning of the line"},
+    ["L"] = {"$", "Go to the end of the line"},
   }, 
   n = {
     ["<C-d>"] = {"<C-d>zz", "Page down and center cursor"},
-    ["<C-u>"] = {"<C-u>zz", "Page up and center cursor"}
+    ["<C-u>"] = {"<C-u>zz", "Page up and center cursor"},
+    ["H"] = {"^", "Go to the beginning of the line"},
+    ["L"] = {"$", "Go to the end of the line"},
   }
+
+
 }
 
 
