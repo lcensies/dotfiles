@@ -174,7 +174,7 @@ local plugins = {
     opts = {
       extensions_list = { 
         "harpoon", 
-        'fzy_native',
+        -- 'fzy_native',
         'git_worktree',
       },
     },
@@ -185,6 +185,7 @@ local plugins = {
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
+    -- event = { "VeryLazy" },
     -- cmd = { "ConformInfo" },
     opts = {
       lsp_fallback = true,
@@ -231,11 +232,29 @@ local plugins = {
       -- TODO: hook to update submodules on worktree checkout
       -- See https://www.youtube.com/watch?v=2uEqYw-N8uE
       config = function(_, _)
-        require("core.utils").load_mappings "git-worktree"
+        require("core.utils").load_mappings "git_worktree"
       end,
 
-    }
+    },
+    {
+    "nvim-treesitter/nvim-treesitter",
+    opts = {
+      ensure_installed = {
+        "vim",
+        "lua",
 
+        "json",
+        "yaml",
+
+        "c",
+        "cpp",
+        "rust",
+
+        "go"
+
+      },
+    },
+  },
     -- config = function(_, opts)
     --   require("conform").setup({
     --     format_on_save = {

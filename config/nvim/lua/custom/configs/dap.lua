@@ -1,0 +1,13 @@
+-- TODO" function to jump to frame"
+--
+-- -- For example, in init.lua
+-- function _G.jump_to_dap_frame(frameId)
+--     require'dap'.frame(frameId)
+-- end
+--
+--
+-- vim.api.nvim_create_user_command('JumpToFrame', function(opts)
+--     jump_to_dap_frame(tonumber(opts.args))
+-- end, {nargs = 1})
+--
+-- vim.api.nvim_set_keymap('n', '<leader>df', ':JumpToFrame ', { noremap = true, silent = true })

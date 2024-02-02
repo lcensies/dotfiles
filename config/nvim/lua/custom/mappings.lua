@@ -17,7 +17,18 @@ M.disabled = {
     ["<C-l>"] = "",
     ["<C-j>"] = "",
     ["<C-k>"] = "",
+
+    -- Terminal toggling with alt is impossible due to the
+    -- toggle
+    ["<A-h>"] = "",
+    ["<A-v>"] = "",
+
   },
+  v = {
+    ["J"] = "",
+    ["K"] = ""
+
+  }
 }
 
 M.telescope = {
@@ -63,6 +74,14 @@ M.dap = {
       "<cmd> DapContinue <CR>",
       "Start or continue the debugger",
     },
+    ["<leader>du"] = {
+      "<cmd> lua require'dap'.up() <CR>",
+      "Debugger go to frame up",
+    },
+    ["<leader>dd"] = {
+      "<cmd> lua require'dap'.down() <CR>",
+      "Debugger go to frame down",
+    },
     ["<leader>dus"] = {
       function()
         local widgets = require "dap.ui.widgets"
@@ -95,46 +114,60 @@ M.dap_go = {
 M.nvterm = {
   plugin = true,
 
-  t = {
+  -- Causes delay after pressing space in terminal
+  -- t = {
+  --
+  --   ["<leader>th"] = {
+  --     function()
+  --       require("nvterm.terminal").toggle "horizontal"
+  --     end,
+  --     "Toggle horizontal term",
+  --   },
+  --   ["<leader>tv"] = {
+  --     function()
+  --       require("nvterm.terminal").toggle "vertical"
+  --     end,
+  --     "Toggle vertical term",
+  --   },
+  -- },
 
-    ["<A-s>"] = {
+  n = {
+    ["<leader>th"] = {
       function()
         require("nvterm.terminal").toggle "horizontal"
       end,
       "Toggle horizontal term",
     },
-  },
-
-  n = {
-    ["<A-s>"] = {
+    ["<leader>tv"] = {
       function()
-        require("nvterm.terminal").toggle "horizontal"
+        require("nvterm.terminal").toggle "vertical"
       end,
-      "Toggle horizontal term",
+      "Toggle vertical term",
     },
   },
+
 }
 
-M.tabufline = {
-  plugin = true,
-
-  n = {
-    -- cycle through buffers
-    ["<S-k>"] = {
-      function()
-        require("nvchad.tabufline").tabuflineNext()
-      end,
-      "Goto next buffer",
-    },
-
-    ["<S-j>"] = {
-      function()
-        require("nvchad.tabufline").tabuflinePrev()
-      end,
-      "Goto prev buffer",
-    },
-  },
-}
+-- M.tabufline = {
+--   plugin = true,
+--
+--   n = {
+--     -- cycle through buffers
+--     ["<S-k>"] = {
+--       function()
+--         require("nvchad.tabufline").tabuflineNext()
+--       end,
+--       "Goto next buffer",
+--     },
+--
+--     ["<S-j>"] = {
+--       function()
+--         require("nvchad.tabufline").tabuflinePrev()
+--       end,
+--       "Goto prev buffer",
+--     },
+--   },
+-- }
 
 M.splits = {
   n = {
@@ -143,6 +176,28 @@ M.splits = {
     ["<leader>sv"] = { "<cmd> vsplit <CR>" },
   },
 }
+
+M.yanks = {
+  n = {
+    ["<leader>yf"] = { "<cmd> :let @+=expand('%:t')<CR>", "Yank current filename" },
+    ["<leader>ya"] = {'[["+y]]', "Yank all content"}
+  }
+}
+
+M.base_maps = {
+  i = {
+    ["<C-c>"] = { "<Esc>", "Exit insert mode with Ctrl+c"},
+  },
+  v = {
+    ["J"] = {":m '>+1<CR>gv=gv", "Move selection up"},
+    ["K"] = {":m '<-2<CR>gv=gv", "Move selection down"},
+  }, 
+  n = {
+    ["<C-d>"] = {"<C-d>zz", "Page down and center cursor"},
+    ["<C-u>"] = {"<C-u>zz", "Page up and center cursor"}
+  }
+}
+
 
 M.crates = {
   plugin = true,
@@ -169,16 +224,16 @@ M.trouble = {
 
 M.git_worktree = {
   plugin = true,
-    n = {
-    ["<leader>gwa"] = {
-      "<cmd> lua require('telescope').extensions.git_worktree.create_git_worktree() <CR>",
-      "Git worktree add",
-    },
-    ["<leader>gws"] = {
-      "<cmd> lua require('telescope').extensions.git_worktree.git_worktrees() <CR>",
-      "Git workTree switch"
-    }
+  n = {
+  ["<leader>gwa"] = {
+    "<cmd> lua require('telescope').extensions.git_worktree.create_git_worktree() <CR>",
+    "Git worktree add",
   },
+  ["<leader>gws"] = {
+    "<cmd> lua require('telescope').extensions.git_worktree.git_worktrees() <CR>",
+    "Git workTree switch"
+  }
+},
 
 }
 return M
