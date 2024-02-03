@@ -22,13 +22,11 @@ M.disabled = {
     -- toggle
     ["<A-h>"] = "",
     ["<A-v>"] = "",
-
   },
   v = {
     ["J"] = "",
-    ["K"] = ""
-
-  }
+    ["K"] = "",
+  },
 }
 
 M.telescope = {
@@ -145,7 +143,6 @@ M.nvterm = {
       "Toggle vertical term",
     },
   },
-
 }
 
 -- M.tabufline = {
@@ -180,30 +177,27 @@ M.splits = {
 M.yanks = {
   n = {
     ["<leader>yf"] = { "<cmd> :let @+=expand('%:t')<CR>", "Yank current filename" },
-    ["<leader>ya"] = {'[["+y]]', "Yank all content"}
-  }
+    ["<leader>ya"] = { '[["+y]]', "Yank all content" },
+  },
 }
 
 M.motions = {
   i = {
-    ["<C-c>"] = { "<Esc>", "Exit insert mode with Ctrl+c"},
+    ["<C-c>"] = { "<Esc>", "Exit insert mode with Ctrl+c" },
   },
   v = {
-    ["J"] = {":m '>+1<CR>gv=gv", "Move selection up"},
-    ["K"] = {":m '<-2<CR>gv=gv", "Move selection down"},
-    ["H"] = {"^", "Go to the beginning of the line"},
-    ["L"] = {"$", "Go to the end of the line"},
-  }, 
+    ["J"] = { ":m '>+1<CR>gv=gv", "Move selection up" },
+    ["K"] = { ":m '<-2<CR>gv=gv", "Move selection down" },
+    ["H"] = { "^", "Go to the beginning of the line" },
+    ["L"] = { "$", "Go to the end of the line" },
+  },
   n = {
-    ["<C-d>"] = {"<C-d>zz", "Page down and center cursor"},
-    ["<C-u>"] = {"<C-u>zz", "Page up and center cursor"},
-    ["H"] = {"^", "Go to the beginning of the line"},
-    ["L"] = {"$", "Go to the end of the line"},
-  }
-
-
+    ["<C-d>"] = { "<C-d>zz", "Page down and center cursor" },
+    ["<C-u>"] = { "<C-u>zz", "Page up and center cursor" },
+    ["H"] = { "^", "Go to the beginning of the line" },
+    ["L"] = { "$", "Go to the end of the line" },
+  },
 }
-
 
 M.crates = {
   plugin = true,
@@ -231,15 +225,14 @@ M.trouble = {
 M.git_worktree = {
   plugin = true,
   n = {
-  ["<leader>gwa"] = {
-    "<cmd> lua require('telescope').extensions.git_worktree.create_git_worktree() <CR>",
-    "Git worktree add",
+    ["<leader>gwa"] = {
+      "<cmd> lua require('telescope').extensions.git_worktree.create_git_worktree() <CR>",
+      "Git worktree add",
+    },
+    ["<leader>gws"] = {
+      "<cmd> lua require('telescope').extensions.git_worktree.git_worktrees() <CR>",
+      "Git workTree switch",
+    },
   },
-  ["<leader>gws"] = {
-    "<cmd> lua require('telescope').extensions.git_worktree.git_worktrees() <CR>",
-    "Git workTree switch"
-  }
-},
-
 }
 return M

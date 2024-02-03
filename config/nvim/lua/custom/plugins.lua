@@ -38,7 +38,41 @@ local plugins = {
     end,
   },
   {
-    "jose-elias-alvarez/null-ls.nvim",
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    -- event = { "BufReadPre", "BufNewFile" },
+    -- event = { "VeryLazy" },
+    -- cmd = { "ConformInfo" },
+    opts = {
+      -- lsp_fallback = true,
+      lsp_fallback = true,
+      format_on_save = { timeout_ms = 500, lsp_fallback = true },
+      formatters_by_ft = {
+        lua = { "stylua" },
+        python = { "isort", "black" },
+        go = { "gofumpt", "goimports-reviser", "golines" },
+        cpp = { "clang_format" },
+        c = { "clang_format" },
+        yaml = { "yamlfix" },
+        sh = { "shfmt" },
+        json = { "jq " },
+      },
+      formatters = {
+        yamlfix = {
+          env = {
+            YAMLFIX_SEQUENCE_STYLE = "block_style",
+          },
+        },
+      },
+      -- init = function()
+      --   -- If you want the formatexpr, here is the place to set it
+      --   vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+      -- end,
+    },
+  },
+  {
+    "nvimtools/none-ls.nvim",
+    -- "jose-elias-alvarez/null-ls.nvim",
     event = "VeryLazy",
     opts = function()
       return require "custom.configs.null-ls"
@@ -86,6 +120,11 @@ local plugins = {
         "rust-analyzer",
 
         "jq",
+
+        "pyright",
+        "black",
+        "mypy",
+        "ruff",
       },
     },
   },
@@ -95,7 +134,7 @@ local plugins = {
     config = function(_, opts)
       require("core.utils").load_mappings "harpoon"
     end,
-    dependencies = { "nvim-lua/plenary.nvim" }
+    dependencies = { "nvim-lua/plenary.nvim" },
   },
   {
     "saecki/crates.nvim",
@@ -172,71 +211,32 @@ local plugins = {
   {
     "nvim-telescope/telescope.nvim",
     opts = {
-      extensions_list = { 
-        "harpoon", 
+      extensions_list = {
+        "harpoon",
         -- 'fzy_native',
-        'git_worktree',
+        "git_worktree",
       },
     },
     config = function(_, _)
-      require('telescope').load_extension('fzy_native')
+      require("telescope").load_extension "fzy_native"
     end,
   },
   {
-    "stevearc/conform.nvim",
-    event = { "BufWritePre" },
-    -- event = { "VeryLazy" },
-    -- cmd = { "ConformInfo" },
-    opts = {
-      lsp_fallback = true,
-      format_on_save = { timeout_ms = 500, lsp_fallback = true },
-      formatters_by_ft = {
-        lua = { "stylua" },
-        python = { "isort", "black" },
-        go = { "gofumpt", "goimports-reviser", "golines" },
-        cpp = { "clang_format" },
-        c = { "clang_format" },
-        yaml = { "yamlfix" },
-        sh = { "shfmt" },
-        json = { "jq " },
-      },
-      formatters = {
-        yamlfix = {
-          env = {
-            YAMLFIX_SEQUENCE_STYLE = "block_style",
-          },
-        },
-      },
-      init = function()
-        -- If you want the formatexpr, here is the place to set it
-        vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
-      end,
+    "ThePrimeagen/git-worktree.nvim",
+    event = "VeryLazy",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "nvim-lua/popup.nvim",
+      "nvim-telescope/telescope.nvim",
+      "nvim-telescope/telescope-fzy-native.nvim",
     },
-    -- Doesn't work well.Manual opening / zeal-cli-lync is better
-    -- {
-    --   "Xertes0/cppdoc.nvim",
-    --   event = "VeryLazy",
-    --   config = function()
-    --     require("cppdoc").setup()
-    --   end,
-    -- },
-    {
-      "ThePrimeagen/git-worktree.nvim",
-      event = "VeryLazy",
-      dependencies = {
-        'nvim-lua/plenary.nvim',
-        'nvim-lua/popup.nvim',
-        'nvim-telescope/telescope.nvim',
-        'nvim-telescope/telescope-fzy-native.nvim'
-      },
-      -- TODO: hook to update submodules on worktree checkout
-      -- See https://www.youtube.com/watch?v=2uEqYw-N8uE
-      config = function(_, _)
-        require("core.utils").load_mappings "git_worktree"
-      end,
-
-    },
-    {
+    -- TODO: hook to update submodules on worktree checkout
+    -- See https://www.youtube.com/watch?v=2uEqYw-N8uE
+    config = function(_, _)
+      require("core.utils").load_mappings "git_worktree"
+    end,
+  },
+  {
     "nvim-treesitter/nvim-treesitter",
     opts = {
       ensure_installed = {
@@ -250,32 +250,20 @@ local plugins = {
         "cpp",
         "rust",
 
-        "go"
+        "go",
 
+        "markdown",
+        "markdown_inline",
       },
     },
   },
-    -- config = function(_, opts)
-    --   require("conform").setup({
-    --     format_on_save = {
-    --       -- These options will be passed to conform.format()
-    --       timeout_ms = 500,
-    --       lsp_fallback = true,
-    --     },
-    --     formatters_by_ft = {
-    --       lua = { "stylua" },
-    --       -- Conform will run multiple formatters sequentially
-    --       python = { "isort", "black" },
-    --       -- Use a sub-list to run only the first available formatter
-    --       yaml = { "yamlfix "},
-    --
-    --       go = { "gofumpt" },
-    --
-    --       c = { "clang_format" },
-    --       cpp = { "clang_format "},
-    --     },
-    --   })
-    -- end,
+  {
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+    end,
   },
 }
 return plugins
