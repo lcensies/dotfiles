@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# Check if the correct number of arguments are provided
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $0 <SWAP_SIZE> <SWAP_FILE_PATH>"
+    echo "Example: $0 1G /swapfile"
+    exit 1
+fi
+
+# Assign the first argument to SWAP_SIZE
+SWAP_SIZE=$1
+# Assign the second argument to SWAP_FILE
+SWAP_FILE=$2
+
+# Check if the swap file already exists
+if [ -f "$SWAP_FILE" ]; then
+    echo "Swap file $SWAP_FILE already exists."
+    exit 1
+fi
+
+# Allocate space for the swap file
+fallocate -l $SWAP_SIZE $SWAP_FILE
+
+# Secure the swap file by setting its permissions
+chmod 600 $SWAP_FILE
+
+# Set up the swap space
+mkswap $SWAP_FILE
+
+# Enable the swap file
+swapon $SWAP_FILE
+
+# Make the swap file permanent by adding it to /etc/fstab
+echo "$SWAP_FILE none swap sw 0 0" >> /etc/fstab
+
+# Output the current swap status
+echo "Swap file has been created and enabled:"
+swapon --show
+
