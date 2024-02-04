@@ -174,6 +174,8 @@ function handle_venv {
       fi
   fi
 }
+# Handle venv on shell spawn
+handle_venv
 
 function ls_after_cd {
   (exa -F 2>/dev/null || ls -F)
