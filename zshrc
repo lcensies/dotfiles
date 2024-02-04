@@ -150,16 +150,42 @@ if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] &&
 fi
 
 # Initialize zoxide
-which zoxide >/dev/null && eval "$(zoxide init --cmd j zsh)"
+# --cmd j is handled by custom alias which performs 
+# cd . with additional logic
+which zoxide >/dev/null && eval "$(zoxide init  zsh)"
 
 # Source fzf completions
 source /usr/share/fzf/key-bindings.zsh 2>/dev/null
 source /usr/share/fzf/completion.zsh 2>/dev/null
 
+function handle_venv {
+  if [[ -z "$VIRTUAL_ENV" ]] ; then
+    ## If env folder is found then activate the vitualenv
+      if [[ -d ./venv ]] ; then
+        source ./venv/bin/activate
+      fi
+  else
+    ## check the current folder belong to earlier VIRTUAL_ENV folder
+    # if yes then do nothing
+    # else deactivate
+      parentdir="$(dirname "$VIRTUAL_ENV")"
+      if [[ "$PWD"/ != "$parentdir"/* ]] ; then
+        deactivate
+      fi
+  fi
+}
+
+function ls_after_cd {
+  (exa -F 2>/dev/null || ls -F)
+}
 
 function cd {
-  builtin cd "$@" && (exa -F 2>/dev/null || ls -F)
+  builtin cd "$@" 
+  ls_after_cd
+  handle_venv
 }
+
+
 
 [[ -d ~/.antidote ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
 source ~/.antidote/antidote.zsh

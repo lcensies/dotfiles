@@ -1,0 +1,5 @@
+# Should be sourced instead of being
+# executed in child shell.
+# Allows to perform zoxide jump
+# together with overriden cd logic
+__zoxide_z $@ && cd .
