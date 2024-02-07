@@ -11,6 +11,10 @@ alias tx="tmuxinator"
 alias open="xdg-open"
 alias o='xdg-open'
 
+# fzf-marks
+# space for auto completion
+alias m="fzm"
+
 
 alias n3="nnn"
 

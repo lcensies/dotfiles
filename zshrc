@@ -8,14 +8,22 @@ fi
 export EDITOR=nvim
 export VISUAL=nvim
 
-fuzzy-xdg-open() {
+# Load completions
+autoload -Uz compinit && compinit
+
+# Doesn't work for some reason. 
+# Anyway, jo . can be used as alternative
+function fuzzy-xdg-open {
   local output
   output=$(fzf --height 40% --reverse </dev/tty) && xdg-open ${(q-)output}
   zle reset-prompt
 }
 
+bindkey -r "^o"
+bindkey -r "^O"
 zle -N fuzzy-xdg-open
 bindkey '^o' fuzzy-xdg-open
+
 
 # Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
 # Initialization code that may require console input (password prompts, [y/n]
@@ -188,11 +196,13 @@ function cd {
 }
 
 
-
+# Download antidote plugin manager if it's not present
 [[ -d ~/.antidote ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
 source ~/.antidote/antidote.zsh
-antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins 2> /dev/null
+antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins 
 
 if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   exec startx
 fi
+
+# export  GO111MODULE="off"
