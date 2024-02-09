@@ -1,7 +1,7 @@
 ---@type ChadrcConfig
 local M = {}
 M.ui = {
-  theme = "gruvbox",
+  theme = "gruvchad",
 
   statusline = {
     theme = "minimal", -- default/vscode/vscode_colored/minimal

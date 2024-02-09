@@ -27,16 +27,30 @@ local plugins = {
       require("nvim-dap-virtual-text").setup()
     end,
   },
-
   {
-    "leoluz/nvim-dap-go",
-    ft = "go",
-    dependencies = "mfussenegger/nvim-dap",
-    config = function(_, opts)
-      require("dap-go").setup(opts)
-      require("core.utils").load_mappings "dap_go"
+    "ray-x/go.nvim",
+    dependencies = { -- optional packages
+      "ray-x/guihua.lua",
+      "neovim/nvim-lspconfig",
+      "nvim-treesitter/nvim-treesitter",
+    },
+    config = function()
+      require("go").setup()
     end,
+    event = { "CmdlineEnter" },
+    ft = { "go", "gomod" },
+    build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
+
+  -- {
+  --   "leoluz/nvim-dap-go",
+  --   ft = "go",
+  --   dependencies = "mfussenegger/nvim-dap",
+  --   config = function(_, opts)
+  --     require("dap-go").setup(opts)
+  --     require("core.utils").load_mappings "dap_go"
+  --   end,
+  -- },
   {
     "jay-babu/mason-nvim-dap.nvim",
     event = "VeryLazy",
@@ -86,6 +100,7 @@ local plugins = {
         yaml = { "yamlfix" },
         sh = { "shfmt" },
         json = { "jq " },
+        markdown = { "mdformat" },
       },
       formatters = {
         yamlfix = {
@@ -130,6 +145,8 @@ local plugins = {
         -- "ansible-language-server",
         -- "ansible-lint",
 
+        "shfmt",
+
         "yamlfix",
         -- "yamlfmt",
 
@@ -148,6 +165,9 @@ local plugins = {
         "mypy",
         "ruff",
         "debugpy",
+
+        "mdformat",
+        "markdownlint",
       },
     },
   },
@@ -270,6 +290,8 @@ local plugins = {
 
         "markdown",
         "markdown_inline",
+
+        "vimdoc",
       },
     },
   },
@@ -281,5 +303,56 @@ local plugins = {
       vim.fn["mkdp#util#install"]()
     end,
   },
+  {
+    "nvim-neotest/neotest",
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "antoinemadec/FixCursorHold.nvim",
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-neotest/neotest-python",
+    },
+    event = "VeryLazy",
+    config = function()
+      require("neotest").setup {
+        adapters = {
+          require "neotest-python" {
+            -- Extra arguments for nvim-dap configuration
+            -- See https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for values
+            dap = { justMyCode = false },
+            -- Command line arguments for runner
+            -- Can also be a function to return dynamic values
+            args = { "--log-level", "DEBUG" },
+            -- Runner to use. Will use pytest if available by default.
+            -- Can be a function to return dynamic value.
+            runner = "pytest",
+            -- Custom python path for the runner.
+            -- Can be a string or a list of strings.
+            -- Can also be a function to return dynamic value.
+            -- If not provided, the path will be inferred by checking for
+            -- virtual envs in the local directory and for Pipenev/Poetry configs
+            python = "./venv/bin/python",
+            -- Returns if a given file path is a test file.
+            -- NB: This function is called a lot so don't perform any heavy tasks within it.
+            -- !!EXPERIMENTAL!! Enable shelling out to `pytest` to discover test
+            -- instances for files containing a parametrize mark (default: false)
+            pytest_discover_instances = true,
+          },
+        },
+      }
+    end,
+  },
+  -- {
+  --   "jackMort/ChatGPT.nvim",
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require("chatgpt").setup()
+  --   end,
+  --   dependencies = {
+  --     "MunifTanjim/nui.nvim",
+  --     "nvim-lua/plenary.nvim",
+  --     "folke/trouble.nvim",
+  --     "nvim-telescope/telescope.nvim",
+  --   },
+  -- },
 }
 return plugins

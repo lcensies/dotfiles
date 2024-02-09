@@ -22,5 +22,5 @@ require "plugins"
 
 -- TODO: move to separate config
 vim.g.dap_virtual_text = true
-vim.opt.nu = true 
+vim.opt.nu = true
 vim.opt.relativenumber = true

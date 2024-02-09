@@ -22,6 +22,8 @@ M.disabled = {
     -- toggle
     ["<A-h>"] = "",
     ["<A-v>"] = "",
+
+    ["<leader>th"] = "",
   },
   v = {
     ["J"] = "",
@@ -203,6 +205,7 @@ M.motions = {
     ["L"] = { "$", "Go to the end of the line" },
   },
   n = {
+    -- TODO: add shortcuts for joining lines
     ["<C-d>"] = { "<C-d>zz", "Page down and center cursor" },
     ["<C-u>"] = { "<C-u>zz", "Page up and center cursor" },
     ["H"] = { "^", "Go to the beginning of the line" },
