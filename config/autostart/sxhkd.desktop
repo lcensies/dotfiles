@@ -4,3 +4,5 @@ Comment=Simple X hotkey daemon
 Exec=/usr/local/bin/sxhkd
 Terminal=false
 Type=Service
+Hidden=false
+
