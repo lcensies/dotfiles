@@ -269,7 +269,9 @@ exec --no-startup-id "sxhkd &"
 # and window server specific optimizations
 # for the virtualbox guest
 # TODO: move to the VBox VM branch
-exec --no-startup-id /usr/bin/VBoxClient-all
+exec --no-startup-id "/usr/bin/VBoxClient-all 2>/dev/null"
 # https://superuser.com/questions/1403123/what-are-differences-between-vboxvga-vmsvga-and-vboxsvga-in-virtualbox
 # exec --no-startup-id /usr/bin/VBoxClient --vmsvga-session
 
+# TODO: move xsettings to  service and ansible role
+exec --no-startup-id "xsettingsd & 2>/dev/null"
