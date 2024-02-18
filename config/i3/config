@@ -13,10 +13,11 @@
 #############################################
 
 # font
-#set $font "pango:DejaVu Sans Mono for Powerline 10"
+# set $font "pango:DejaVu Sans Mono for Powerline 10"
 #set $font "pango:Source Code Pro for Powerline 10"
 set $font "pango:JetBrains Mono 11"
 font $font
+
 exec --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
 
 # floating modifier
@@ -28,14 +29,12 @@ floating_modifier $mod
 # focus follows mouse
 focus_follows_mouse no
 
-# no window decorations
-new_window pixel 1
 
 # gaps
 gaps inner 10
 gaps outer 10
 # Only enable gaps on a workspace when there is at least one container
-smart_gaps on
+# smart_gaps on
 
 #############################################
 #              Script Section               #
@@ -46,13 +45,17 @@ smart_gaps on
 #
 
 # display brightness management (laptop)
-bindsym XF86MonBrightnessUp     exec --no-startup-id "xbacklight +10"
+
+bindsym Control+Shift+l  exec --no-startup-id "~/.scripts/lock &"
+# TODO: figure out why lock doesn't work via power menu
+bindsym Control+Shift+p  exec --no-startup-id "rofi -show power-menu -modi power-menu:rofi-power-menu"
+
 bindsym XF86MonBrightnessDown   exec --no-startup-id "xbacklight -10"
+bindsym XF86MonBrightnessUp     exec --no-startup-id "xbacklight +10"
 # start dmenu-launcher
 # TODO: ensure colors are correct
-bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' -theme ~/.config/rofi/colorblocks/launcher.rasi"
-# lock i3 with i3lock
-bindsym $mod+Shift+x            exec --no-startup-id i3lock -c 000000
+# TODO: https://gist.github.com/MilesMcBain/0e6f449c3f8e07ed1b06aa785b0726ff (present in i3 role)
+bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' --theme ~/.config/rofi/colorblocks/launcher.rasi"
 
 #############################################
 #                  Keymaps                  #
@@ -97,6 +100,7 @@ bindsym $mod+s                  layout stacking
 bindsym $mod+w                  layout tabbed
 bindsym $mod+e                  layout toggle split
 
+
 # toggle tiling / floating
 bindsym $mod+Shift+Tab        floating toggle
 
@@ -133,9 +137,19 @@ bindsym XF86AudioMicMute        exec --no-startup-id pactl set-source-mute @DEFA
 #             Workspace & Tags              #
 #############################################
 
+# toggle workspaces with Alt+m
+# TODO: consider changing to win because
+# alt+m is bound to mute on browser
+bindsym Mod1+m workspace back_and_forth 
+
 # switch to workspace
-bindsym $mod+1 workspace 1
-bindsym $mod+2 workspace 2
+bindsym $mod+1 workspace 1:Web
+bindsym $mod+2 workspace 2:Terminal
+
+# Alt+w-> web workspace
+bindsym Mod1+w workspace 1:Web
+# Alt+space -> terminal workspace
+bindsym Mod1+space workspace 2:Terminal
 bindsym $mod+3 workspace 3
 bindsym $mod+4 workspace 4
 bindsym $mod+5 workspace 5
@@ -146,8 +160,8 @@ bindsym $mod+9 workspace 9
 bindsym $mod+0 workspace 10
 
 # move focused container to workspace
-bindsym $mod+Shift+1 move container to workspace 1
-bindsym $mod+Shift+2 move container to workspace 2
+bindsym $mod+Shift+1 move container to workspace 1:Web
+bindsym $mod+Shift+2 move container to workspace 2:Terminal
 bindsym $mod+Shift+3 move container to workspace 3
 bindsym $mod+Shift+4 move container to workspace 4
 bindsym $mod+Shift+5 move container to workspace 5
@@ -234,6 +248,18 @@ bar {
 #            specific windows               #
 #############################################
 
+# no window decorations
+new_window pixel 1
+
+exec --no-startup-id i3-msg 'workspace 1:Web; exec /usr/bin/firefox'
+exec --no-startup-id i3-msg 'workspace 2:Terminal; exec /usr/bin/kitty'
+
+
+# Auto focus window as it becomes urgent
+# (for example, on tab open in browser)
+# https://unix.stackexchange.com/questions/714427/i3wm-how-to-automatically-switch-workspace-when-a-window-of-a-specific-applicat
+for_window [urgent="latest"] focus
+
 # always floating
 for_window [class="Gedit"]          floating enable
 
@@ -244,6 +270,11 @@ for_window [class="firefox"]        border none
 #############################################
 #            auto start with i3             #
 #############################################
+
+# Setup xss-lock daemon
+# Auto sleep after 5 minutes
+# exec_always --no-startup-id xset +dpms dpms 0 300 300 
+# exec_always --no-startup-id xss-lock --transfer-sleep-lock -- ~/.scripts/lock
 
 # composite manager
 
@@ -256,11 +287,11 @@ exec --no-startup-id dunst -config ~/.config/dunstrc
 # no beep!
 exec --no-startup-id xset b off
 # wallpaper
-exec --no-startup-id feh --bg-fill ~/.config/wallpapers/arch-yellow-liquid.png
+exec --no-startup-id feh --bg-fill ~/.config/wallpapers/yellow-material.jpeg
 # syncthing
 # exec --no-startup-id syncthing --no-browser
 # use lockscreen as screensaver (needs xss-lock installed)
-exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
+# exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
 
 
 exec --no-startup-id "sxhkd &"
