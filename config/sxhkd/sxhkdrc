@@ -1,10 +1,20 @@
+# In new config alt + space switches to the second workspace with terminal
 # Hide / show dropdown terminal
-alt + space
-	~/.scripts/tdrop_toggle
+# alt + space
+# 	~/.scripts/tdrop_toggle
 
 control + alt + p
 	flameshot gui
 
+# Lock session
+control + alt + l
+  # Disable 
+  # ~/.scripts/lock &
+  i3lock -c 000000
+
+  
+
 # Simulate left mouse button click
 alt + c
 	~/.scripts/click
+
