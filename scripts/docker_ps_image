@@ -1,3 +1,9 @@
 #!/bin/bash
 
-docker ps --filter "ancestor=$1"
+# Find docker container by image passed as first parameter.
+# Other positional args are passed to the docker
+
+IMAGE=$1
+shift
+
+docker ps --filter "ancestor=$IMAGE" $@
