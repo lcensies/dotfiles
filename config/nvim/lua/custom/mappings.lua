@@ -24,6 +24,9 @@ M.disabled = {
     ["<A-v>"] = "",
 
     ["<leader>th"] = "",
+
+    -- Was set to toggle line number. Overriden to neotest
+    ["<leader>n"] = "",
   },
   v = {
     ["J"] = "",
@@ -249,4 +252,19 @@ M.git_worktree = {
     },
   },
 }
+
+M.neotest = {
+  plugin = true,
+  n = {
+    ["<leader>nt"] = {
+      "<cmd> Neotest run <CR>",
+      "Neotest run",
+    },
+    ["<leader>nd"] = {
+      "<cmd> lua require('neotest').run.run({strategy = 'dap'}) <CR>",
+      "Neotest debug",
+    },
+  },
+}
+
 return M

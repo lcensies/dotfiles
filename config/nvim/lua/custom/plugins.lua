@@ -42,15 +42,15 @@ local plugins = {
     build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
 
-  -- {
-  --   "leoluz/nvim-dap-go",
-  --   ft = "go",
-  --   dependencies = "mfussenegger/nvim-dap",
-  --   config = function(_, opts)
-  --     require("dap-go").setup(opts)
-  --     require("core.utils").load_mappings "dap_go"
-  --   end,
-  -- },
+  {
+    "leoluz/nvim-dap-go",
+    ft = "go",
+    dependencies = "mfussenegger/nvim-dap",
+    config = function(_, opts)
+      require("dap-go").setup(opts)
+      require("core.utils").load_mappings "dap_go"
+    end,
+  },
   {
     "jay-babu/mason-nvim-dap.nvim",
     event = "VeryLazy",
@@ -310,9 +310,12 @@ local plugins = {
       "antoinemadec/FixCursorHold.nvim",
       "nvim-treesitter/nvim-treesitter",
       "nvim-neotest/neotest-python",
+      -- Go adapter seems to be buggy
+      "nvim-neotest/neotest-go",
     },
     event = "VeryLazy",
     config = function()
+      require("core.utils").load_mappings "neotest"
       require("neotest").setup {
         adapters = {
           require "neotest-python" {
@@ -337,6 +340,7 @@ local plugins = {
             -- instances for files containing a parametrize mark (default: false)
             pytest_discover_instances = true,
           },
+          require "neotest-go",
         },
       }
     end,
