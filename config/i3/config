@@ -18,7 +18,9 @@
 set $font "pango:JetBrains Mono 11"
 font $font
 
-exec --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
+# exec --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
+exec --no-startup-id "setxkbmap -layout us,ru"
+exec --no-startup-id "setxkbmap -option 'grp:alt_shift_toggle'"
 
 # floating modifier
 # mod1 = Alt (xmodmap to show)
