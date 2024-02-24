@@ -3,8 +3,9 @@
 # alt + space
 # 	~/.scripts/tdrop_toggle
 
-control + alt + p
-	flameshot gui
+# control + alt + p
+	# flameshot gui
+  # flameshot gui -r &  | xclip -selection clipboard -t image/png && killall flameshot
 
 # Lock session
 control + alt + l
