@@ -6,7 +6,4 @@ if test -z "$DBUS_SESSION_BUS_ADDRESS"; then
 	eval $(dbus-launch --sh-syntax --exit-with-session)
 fi
 
-# setxkbmap ch &
-setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle
-
 exec dbus-launch --exit-with-session i3
