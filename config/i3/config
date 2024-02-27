@@ -19,8 +19,11 @@ set $font "pango:JetBrains Mono 11"
 font $font
 
 # exec --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
-exec --no-startup-id "setxkbmap -layout us,ru"
-exec --no-startup-id "setxkbmap -option 'grp:alt_shift_toggle'"
+# exec --no-startup-id "setxkbmap -layout us,ru"
+# exec --no-startup-id "setxkbmap -option 'grp:alt_shift_toggle'"
+
+# https://askubuntu.com/questions/1262250/how-to-change-language-in-i3wm
+exec_always --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
 
 # floating modifier
 # mod1 = Alt (xmodmap to show)
@@ -36,7 +39,7 @@ focus_follows_mouse no
 gaps inner 10
 gaps outer 10
 # Only enable gaps on a workspace when there is at least one container
-smart_gaps on
+# smart_gaps on
 
 #############################################
 #              Script Section               #
@@ -283,7 +286,7 @@ for_window [class="firefox"]        border none
 # composite manager
 
 # Might cause troubles with NVIDIA cards, temporarily disabled
-# exec --no-startup-id picom -b --config ~/.config/picom/picom.conf
+exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
 # less eye pain
 exec --no-startup-id redshift -l 46.95:7.45 -t 6500:3000
 # start notification daemon
