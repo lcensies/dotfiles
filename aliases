@@ -5,7 +5,6 @@ alias j="source ~/.scripts/_j"
 
 alias tx="tmuxinator"
 
-
 # TODO change xdg-open to mimeo 
 # TODO integration with fasd / zoxide
 alias open="xdg-open"
@@ -21,6 +20,7 @@ alias n3="nnn"
 alias p="python3"
 
 # Git
+alias lg="lazygit"
 alias g="git"
 alias gc="git commit"
 alias ga="git add"
