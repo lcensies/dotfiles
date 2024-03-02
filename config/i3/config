@@ -155,6 +155,10 @@ bindsym $mod+2 workspace 2:Terminal
 
 # Alt+w-> web workspace
 bindsym Mod1+w workspace 1:Web
+# TODO: 
+# any workspace -> switch to second 
+# second workspace -> switch to previous
+
 # Alt+space -> terminal workspace
 bindsym Mod1+space workspace 2:Terminal
 bindsym $mod+3 workspace 3
@@ -301,7 +305,7 @@ exec --no-startup-id feh --bg-fill ~/.config/wallpapers/yellow-material.jpeg
 # exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock -c000000 --nofork
 
 
-exec --no-startup-id "sxhkd &"
+exec_always --no-startup-id "sxhkd &"
 
 # Activate features like shared clipboard
 # and window server specific optimizations
