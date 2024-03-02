@@ -64,7 +64,7 @@ zstyle ':completion:*' menu select
 # End of lines configured by zsh-newuser-install
 # The following lines were added by compinstall
 # TODO: parametrize user name
-zstyle :compinstall filename '/home/esc2/.zshrc'
+zstyle :compinstall filename "/home/$USER/.zshrc"
 
 autoload -Uz compinit
 compinit
@@ -77,6 +77,7 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 # Scripts
 test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
+test -d ~/.scripts/priv && export PATH="$PATH:/home/${USER}/.scripts/priv"
 
 export NNN_PLUG='f:finder;o:fzopen;p:preview-tui;j:autojump'
 export NNN_FIFO=/tmp/nnn.fifo
@@ -194,6 +195,7 @@ function cd {
   ls_after_cd
   handle_venv
 }
+
 
 
 # Download antidote plugin manager if it's not present
