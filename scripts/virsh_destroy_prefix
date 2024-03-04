@@ -1,0 +1,3 @@
+#!/bin/sh
+
+virsh list --all | grep $1 | awk '{print $2}' | xargs -I VM virsh destroy VM
