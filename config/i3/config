@@ -290,7 +290,7 @@ for_window [class="firefox"]        border none
 # composite manager
 
 # Might cause troubles with NVIDIA cards, temporarily disabled
-exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
+# exec_always --no-startup-id picom -b --config ~/.config/picom/picom.conf
 # less eye pain
 exec --no-startup-id redshift -l 46.95:7.45 -t 6500:3000
 # start notification daemon
