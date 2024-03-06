@@ -1,6 +1,8 @@
 alias l="ls -l"
 alias lf="ls | fzf"
 
+alias btui="bluetuith"
+
 alias j="source ~/.scripts/_j"
 
 alias tx="tmuxinator"
@@ -20,6 +22,7 @@ alias n3="nnn"
 alias p="python3"
 
 # Git
+# TODO: change to git aliases
 alias lg="lazygit"
 alias g="git"
 alias gc="git commit"
