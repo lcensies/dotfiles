@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# Displays absolute path of the file
+
+readlink -f "$1"
