@@ -145,7 +145,9 @@ local plugins = {
         -- "ansible-language-server",
         -- "ansible-lint",
 
+        -- bash
         "shfmt",
+        "bash-language-server",
 
         "yamlfix",
         -- "yamlfmt",
@@ -345,6 +347,34 @@ local plugins = {
       }
     end,
   },
+
+  {
+    "shortcuts/no-neck-pain.nvim",
+    config = function(_)
+      require("core.utils").load_mappings "no_neck_pain"
+      -- local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
+      -- autocmd("BufWritePre", {
+      --   pattern = "",
+      --   command = ":%s/\\s\\+$//e",
+      -- })
+    end,
+
+    event = "VeryLazy",
+  },
+  -- {
+  --   "folke/zen-mode.nvim",
+  --   conifg = function(_)
+  --     require("core.utils").load_mappings "zen_mode"
+  --   end,
+  --
+  --   event = "VeryLazy",
+  --
+  --   opts = {
+  --     -- your configuration comes here
+  --     -- or leave it empty to use the default settings
+  --     -- refer to the configuration section below
+  --   },
+  -- },
   -- {
   --   "jackMort/ChatGPT.nvim",
   --   event = "VeryLazy",
