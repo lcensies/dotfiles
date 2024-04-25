@@ -39,7 +39,7 @@ focus_follows_mouse no
 gaps inner 10
 gaps outer 10
 # Only enable gaps on a workspace when there is at least one container
-# smart_gaps on
+smart_gaps on
 
 #############################################
 #              Script Section               #
@@ -51,6 +51,7 @@ gaps outer 10
 
 # display brightness management (laptop)
 
+bindsym Control+Shift+b exec "flameshot gui"
 bindsym Control+Shift+l  exec --no-startup-id "(i3lock -n -c 000000 &) && systemctl suspend"
 bindsym Control+Shift+p  exec --no-startup-id "rofi -show power-menu -modi power-menu:rofi-power-menu"
 
