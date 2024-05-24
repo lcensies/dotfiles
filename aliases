@@ -1,13 +1,21 @@
 alias l="ls -l"
 alias lf="ls | fzf"
 
+
 alias btui="bluetuith"
 
 alias j="source ~/.scripts/_j"
 
+alias t="task"
+alias ta="task add"
+alias tl="task list"
+alias td="task done"
+alias tdel="task delete"
+
+
 alias tx="tmuxinator"
 
-# TODO change xdg-open to mimeo 
+# TODO change xdg-open to mimeo
 # TODO integration with fasd / zoxide
 alias open="xdg-open"
 alias o='xdg-open'
