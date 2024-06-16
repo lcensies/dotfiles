@@ -2,32 +2,6 @@ local cmp = require "cmp"
 
 local plugins = {
   {
-    "rcarriga/nvim-dap-ui",
-    event = "VeryLazy",
-    dependencies = "mfussenegger/nvim-dap",
-    config = function()
-      local dap = require "dap"
-      local dapui = require "dapui"
-      dapui.setup()
-      dap.listeners.after.event_initialized["dapui_config"] = function()
-        dapui.open()
-      end
-      dap.listeners.before.event_terminated["dapui_config"] = function()
-        dapui.close()
-      end
-      dap.listeners.before.event_exited["dapui_config"] = function()
-        dapui.close()
-      end
-    end,
-  },
-  {
-    "theHamsta/nvim-dap-virtual-text",
-    lazy = false,
-    config = function(_, opts)
-      require("nvim-dap-virtual-text").setup()
-    end,
-  },
-  {
     "ray-x/go.nvim",
     dependencies = { -- optional packages
       "ray-x/guihua.lua",
@@ -42,45 +16,6 @@ local plugins = {
     build = ':lua require("go.install").update_all_sync()', -- if you need to install/update all binaries
   },
 
-  {
-    "leoluz/nvim-dap-go",
-    ft = "go",
-    dependencies = "mfussenegger/nvim-dap",
-    config = function(_, opts)
-      require("dap-go").setup(opts)
-      require("core.utils").load_mappings "dap_go"
-    end,
-  },
-  {
-    "jay-babu/mason-nvim-dap.nvim",
-    event = "VeryLazy",
-    dependencies = {
-      "williamboman/mason.nvim",
-      "mfussenegger/nvim-dap",
-    },
-    opts = {
-      handlers = {},
-    },
-  },
-  {
-    "mfussenegger/nvim-dap",
-    config = function(_, _)
-      require("core.utils").load_mappings "dap"
-    end,
-  },
-  {
-    "mfussenegger/nvim-dap-python",
-    ft = "python",
-    dependencies = {
-      "mfussenegger/nvim-dap",
-      "rcarriga/nvim-dap-ui",
-    },
-    config = function(_, opts)
-      local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
-      require("dap-python").setup(path)
-      require("core.utils").load_mappings "dap_python"
-    end,
-  },
   {
     "stevearc/conform.nvim",
     event = { "BufWritePre" },
@@ -297,70 +232,63 @@ local plugins = {
       },
     },
   },
-  {
-    "iamcco/markdown-preview.nvim",
-    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
-    ft = { "markdown" },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
-  },
-  {
-    "nvim-neotest/neotest",
-    dependencies = {
-      "nvim-lua/plenary.nvim",
-      "antoinemadec/FixCursorHold.nvim",
-      "nvim-treesitter/nvim-treesitter",
-      "nvim-neotest/neotest-python",
-      -- Go adapter seems to be buggy
-      "nvim-neotest/neotest-go",
-    },
-    event = "VeryLazy",
-    config = function()
-      require("core.utils").load_mappings "neotest"
-      require("neotest").setup {
-        adapters = {
-          require "neotest-python" {
-            -- Extra arguments for nvim-dap configuration
-            -- See https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for values
-            dap = { justMyCode = false },
-            -- Command line arguments for runner
-            -- Can also be a function to return dynamic values
-            args = { "--log-level", "DEBUG" },
-            -- Runner to use. Will use pytest if available by default.
-            -- Can be a function to return dynamic value.
-            runner = "pytest",
-            -- Custom python path for the runner.
-            -- Can be a string or a list of strings.
-            -- Can also be a function to return dynamic value.
-            -- If not provided, the path will be inferred by checking for
-            -- virtual envs in the local directory and for Pipenev/Poetry configs
-            python = "./venv/bin/python",
-            -- Returns if a given file path is a test file.
-            -- NB: This function is called a lot so don't perform any heavy tasks within it.
-            -- !!EXPERIMENTAL!! Enable shelling out to `pytest` to discover test
-            -- instances for files containing a parametrize mark (default: false)
-            pytest_discover_instances = true,
-          },
-          require "neotest-go",
-        },
-      }
-    end,
-  },
+  -- Might be useful, but currently using custom tools
+  -- {
+  --   "nvim-neotest/neotest",
+  --   dependencies = {
+  --     "nvim-lua/plenary.nvim",
+  --     "antoinemadec/FixCursorHold.nvim",
+  --     "nvim-treesitter/nvim-treesitter",
+  --     "nvim-neotest/neotest-python",
+  --     -- Go adapter seems to be buggy
+  --     "nvim-neotest/neotest-go",
+  --   },
+  --   event = "VeryLazy",
+  --   config = function()
+  --     require("core.utils").load_mappings "neotest"
+  --     require("neotest").setup {
+  --       adapters = {
+  --         require "neotest-python" {
+  --           -- Extra arguments for nvim-dap configuration
+  --           -- See https://github.com/microsoft/debugpy/wiki/Debug-configuration-settings for values
+  --           dap = { justMyCode = false },
+  --           -- Command line arguments for runner
+  --           -- Can also be a function to return dynamic values
+  --           args = { "--log-level", "DEBUG" },
+  --           -- Runner to use. Will use pytest if available by default.
+  --           -- Can be a function to return dynamic value.
+  --           runner = "pytest",
+  --           -- Custom python path for the runner.
+  --           -- Can be a string or a list of strings.
+  --           -- Can also be a function to return dynamic value.
+  --           -- If not provided, the path will be inferred by checking for
+  --           -- virtual envs in the local directory and for Pipenev/Poetry configs
+  --           python = "./venv/bin/python",
+  --           -- Returns if a given file path is a test file.
+  --           -- NB: This function is called a lot so don't perform any heavy tasks within it.
+  --           -- !!EXPERIMENTAL!! Enable shelling out to `pytest` to discover test
+  --           -- instances for files containing a parametrize mark (default: false)
+  --           pytest_discover_instances = true,
+  --         },
+  --         require "neotest-go",
+  --       },
+  --     }
+  --   end,
+  -- },
 
-  {
-    "shortcuts/no-neck-pain.nvim",
-    config = function(_)
-      require("core.utils").load_mappings "no_neck_pain"
-      -- local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
-      -- autocmd("BufWritePre", {
-      --   pattern = "",
-      --   command = ":%s/\\s\\+$//e",
-      -- })
-    end,
-
-    event = "VeryLazy",
-  },
+  -- {
+  --   "shortcuts/no-neck-pain.nvim",
+  --   config = function(_)
+  --     require("core.utils").load_mappings "no_neck_pain"
+  --     -- local autocmd = vim.api.nvim_create_autocmd -- Create autocommand
+  --     -- autocmd("BufWritePre", {
+  --     --   pattern = "",
+  --     --   command = ":%s/\\s\\+$//e",
+  --     -- })
+  --   end,
+  --
+  --   event = "VeryLazy",
+  -- },
   -- {
   --   "folke/zen-mode.nvim",
   --   conifg = function(_)
@@ -387,6 +315,73 @@ local plugins = {
   --     "folke/trouble.nvim",
   --     "nvim-telescope/telescope.nvim",
   --   },
+  -- },
+  -- Well, I don't use debugger anyway
+  --   {
+  --   "leoluz/nvim-dap-go",
+  --   ft = "go",
+  --   dependencies = "mfussenegger/nvim-dap",
+  --   config = function(_, opts)
+  --     require("dap-go").setup(opts)
+  --     require("core.utils").load_mappings "dap_go"
+  --   end,
+  -- },
+  -- {
+  --   "jay-babu/mason-nvim-dap.nvim",
+  --   event = "VeryLazy",
+  --   dependencies = {
+  --     "williamboman/mason.nvim",
+  --     "mfussenegger/nvim-dap",
+  --   },
+  --   opts = {
+  --     handlers = {},
+  --   },
+  -- },
+  -- {
+  --   "mfussenegger/nvim-dap",
+  --   config = function(_, _)
+  --     require("core.utils").load_mappings "dap"
+  --   end,
+  -- },
+  -- {
+  --   "mfussenegger/nvim-dap-python",
+  --   ft = "python",
+  --   dependencies = {
+  --     "mfussenegger/nvim-dap",
+  --     "rcarriga/nvim-dap-ui",
+  --   },
+  --   config = function(_, opts)
+  --     local path = "~/.local/share/nvim/mason/packages/debugpy/venv/bin/python"
+  --     require("dap-python").setup(path)
+  --     require("core.utils").load_mappings "dap_python"
+  --   end,
+  -- },
+  --
+  -- {
+  --   "rcarriga/nvim-dap-ui",
+  --   event = "VeryLazy",
+  --   dependencies = "mfussenegger/nvim-dap",
+  --   config = function()
+  --     local dap = require "dap"
+  --     local dapui = require "dapui"
+  --     dapui.setup()
+  --     dap.listeners.after.event_initialized["dapui_config"] = function()
+  --       dapui.open()
+  --     end
+  --     dap.listeners.before.event_terminated["dapui_config"] = function()
+  --       dapui.close()
+  --     end
+  --     dap.listeners.before.event_exited["dapui_config"] = function()
+  --       dapui.close()
+  --     end
+  --   end,
+  -- },
+  -- {
+  --   "theHamsta/nvim-dap-virtual-text",
+  --   lazy = false,
+  --   config = function(_, opts)
+  --     require("nvim-dap-virtual-text").setup()
+  --   end,
   -- },
 }
 return plugins
