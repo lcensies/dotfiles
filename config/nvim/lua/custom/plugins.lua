@@ -10,6 +10,7 @@ local plugins = {
     },
     config = function()
       require("go").setup()
+      require("core.utils").load_mappings "go"
     end,
     event = { "CmdlineEnter" },
     ft = { "go", "gomod" },
@@ -317,7 +318,7 @@ local plugins = {
   --   },
   -- },
   -- Well, I don't use debugger anyway
-  --   {
+  -- {
   --   "leoluz/nvim-dap-go",
   --   ft = "go",
   --   dependencies = "mfussenegger/nvim-dap",
@@ -356,7 +357,7 @@ local plugins = {
   --     require("core.utils").load_mappings "dap_python"
   --   end,
   -- },
-  --
+
   -- {
   --   "rcarriga/nvim-dap-ui",
   --   event = "VeryLazy",

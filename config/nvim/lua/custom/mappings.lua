@@ -66,64 +66,64 @@ M.harpoon = {
   },
 }
 
-M.dap = {
-  plugin = true,
-  n = {
-    ["<leader>db"] = {
-      "<cmd> DapToggleBreakpoint <CR>",
-      "Add breakpoint at line",
-    },
-    ["<leader>dr"] = {
-      "<cmd> DapContinue <CR>",
-      "Start or continue the debugger",
-    },
-    ["<leader>du"] = {
-      "<cmd> lua require'dap'.up() <CR>",
-      "Debugger go to frame up",
-    },
-    ["<leader>dd"] = {
-      "<cmd> lua require'dap'.down() <CR>",
-      "Debugger go to frame down",
-    },
-    ["<leader>dus"] = {
-      function()
-        local widgets = require "dap.ui.widgets"
-        local sidebar = widgets.sidebar(widgets.scopes)
-        sidebar.open()
-      end,
-      "Open debugging sidebar",
-    },
-  },
-}
+-- M.dap = {
+--   plugin = true,
+--   n = {
+--     ["<leader>db"] = {
+--       "<cmd> DapToggleBreakpoint <CR>",
+--       "Add breakpoint at line",
+--     },
+--     ["<leader>dr"] = {
+--       "<cmd> DapContinue <CR>",
+--       "Start or continue the debugger",
+--     },
+--     ["<leader>du"] = {
+--       "<cmd> lua require'dap'.up() <CR>",
+--       "Debugger go to frame up",
+--     },
+--     ["<leader>dd"] = {
+--       "<cmd> lua require'dap'.down() <CR>",
+--       "Debugger go to frame down",
+--     },
+--     ["<leader>dus"] = {
+--       function()
+--         local widgets = require "dap.ui.widgets"
+--         local sidebar = widgets.sidebar(widgets.scopes)
+--         sidebar.open()
+--       end,
+--       "Open debugging sidebar",
+--     },
+--   },
+-- }
 
-M.dap_go = {
-  plugin = true,
-  n = {
-    ["<leader>dgt"] = {
-      function()
-        require("dap-go").debug_test()
-      end,
-      "Debug go test",
-    },
-    ["<leader>dgl"] = {
-      function()
-        require("dap-go").debug_last()
-      end,
-      "Debug go last test",
-    },
-  },
-}
-
-M.dap_python = {
-  plugin = true,
-  n = {
-    ["<leader>dpr"] = {
-      function()
-        require("dap-python").test_method()
-      end,
-    },
-  },
-}
+-- M.dap_go = {
+--   plugin = true,
+--   n = {
+--     ["<leader>dgt"] = {
+--       function()
+--         require("dap-go").debug_test()
+--       end,
+--       "Debug go test",
+--     },
+--     ["<leader>dgl"] = {
+--       function()
+--         require("dap-go").debug_last()
+--       end,
+--       "Debug go last test",
+--     },
+--   },
+-- }
+--
+-- M.dap_python = {
+--   plugin = true,
+--   n = {
+--     ["<leader>dpr"] = {
+--       function()
+--         require("dap-python").test_method()
+--       end,
+--     },
+--   },
+-- }
 
 M.nvterm = {
   plugin = true,
