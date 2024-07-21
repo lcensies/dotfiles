@@ -24,6 +24,7 @@ require "plugins"
 vim.g.dap_virtual_text = true
 vim.opt.nu = true
 vim.opt.relativenumber = true
+vim.opt.conceallevel = 1
 
 -- Figure out the system Python for Neovim.
 -- if vim.fn.exists "$VIRTUAL_ENV" == 1 then

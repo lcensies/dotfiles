@@ -252,19 +252,29 @@ M.git_worktree = {
     },
   },
 }
-
-M.neotest = {
+--
+M.obsidian = {
   plugin = true,
   n = {
-    ["<leader>nt"] = {
-      "<cmd> Neotest run <CR>",
-      "Neotest run",
-    },
-    ["<leader>nd"] = {
-      "<cmd> lua require('neotest').run.run({strategy = 'dap'}) <CR>",
-      "Neotest debug",
+    ["<leader>gl"] = {
+      "<cmd> ObsidianToday <CR>",
+      "Obsidian Daily Note",
     },
   },
 }
+
+-- M.neotest = {
+--   plugin = true,
+--   n = {
+--     ["<leader>nt"] = {
+--       "<cmd> Neotest run <CR>",
+--       "Neotest run",
+--     },
+--     ["<leader>nd"] = {
+--       "<cmd> lua require('neotest').run.run({strategy = 'dap'}) <CR>",
+--       "Neotest debug",
+--     },
+--   },
+-- }
 
 return M
