@@ -6,9 +6,11 @@ local opts = {
     -- null_ls.builtins.formatting.clang_format,
 
     -- null_ls.builtins.formatting.stylua,
-    null_ls.builtins.diagnostics.luacheck,
+
+    -- null_ls.builtins.diagnostics.luacheck,
+    --
     -- For some reason, conform + jq is not working
-    null_ls.builtins.formatting.jq,
+    -- null_ls.builtins.formatting.jq,
     -- Configuration of yamlfix ig broken with yamlfix and null-ls, so I
     -- switched to conform for formatters
     -- null_ls.builtins.formatting.yamlfmt,
@@ -21,14 +23,14 @@ local opts = {
 
     -- Python
     -- null_ls.builtins.formatting.black,
-    null_ls.builtins.diagnostics.mypy,
-    null_ls.builtins.diagnostics.ruff,
+    -- null_ls.builtins.diagnostics.mypy,
+    -- null_ls.builtins.diagnostics.ruff,
 
     -- Markdown
     -- null_ls.builtins.diagnostics.markdownlint,
 
     -- null_ls.builtins.diagnostics.shellcheck,
-    null_ls.builtins.code_actions.shellcheck,
+    -- null_ls.builtins.code_actions.shellcheck,
   },
   -- on_attach = function(client, bufnr)
   --   if client.supports_method "textDocument/formatting" then
