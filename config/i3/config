@@ -18,7 +18,7 @@
 set $font "pango:JetBrains Mono 11"
 font $font
 
-# exec --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
+exec --no-startup-id "setxkbmap -model pc104 -layout us,ru -option grp:alt_shift_toggle"
 # exec --no-startup-id "setxkbmap -layout us,ru"
 # exec --no-startup-id "setxkbmap -option 'grp:alt_shift_toggle'"
 
@@ -64,6 +64,7 @@ bindsym XF86MonBrightnessUp     exec --no-startup-id "xbacklight +10"
 # TODO: ensure colors are correct
 # TODO: https://gist.github.com/MilesMcBain/0e6f449c3f8e07ed1b06aa785b0726ff (present in i3 role)
 bindsym $mod+space              exec --no-startup-id   "rofi -show combi -modes combi -combi-modes 'window,drun' --theme ~/.config/rofi/colorblocks/launcher.rasi"
+bindsym $mod+Shift+w exec --no-startup-id   "rofi -show wifi -modi 'wifi:iwdrofimenu'"
 
 #############################################
 #                  Keymaps                  #
@@ -270,7 +271,7 @@ new_window pixel 1
 
 exec --no-startup-id i3-msg 'workspace 1:Web; exec /usr/bin/firefox'
 exec --no-startup-id i3-msg 'workspace 2:Terminal; exec /usr/bin/kitty'
-
+exec --no-startup-id i3-msg 'workspace 9; exec /usr/bin/nekobox'
 
 # Auto focus window as it becomes urgent
 # (for example, on tab open in browser)
