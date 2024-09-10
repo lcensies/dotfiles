@@ -67,8 +67,9 @@ alias k="kubectl"
 
 
 # Vagrant
-alias vg="vagrant"
-alias vgl="~/.scripts/vagrant_libvirt"
+# Vagrant is aliased to vg to auto determine whether to use 
+# vagrant or vagrant_libvirt
+alias vagrant="vg"
 alias vgssh="vagrant ssh"
 alias vgup="vagrant up"
 alias vgupp="vagrant up --provision"
