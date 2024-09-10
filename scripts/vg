@@ -1,0 +1,4 @@
+#!/bin/bash
+
+which vagrant_libvirt 2>/dev/null && vagrant_libvirt $@ && exit 
+which vagrant 2>/dev/null && vagrant $@ && exit 

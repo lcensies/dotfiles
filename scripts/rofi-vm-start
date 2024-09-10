@@ -1,0 +1,40 @@
+#!/usr/bin/bash
+# script to list and start selected vm with rofi / dmenu
+#
+# Bindings
+#
+# enter to start virt-viewer
+# alt+m to start virt-manager
+#
+#
+## config
+display=:0
+
+dom=$1
+
+if [ -z "$dom"  ]; then
+    dom=$(sudo virsh list --all --name | rofi -dmenu -p "select vm" -kb-custom-1 'Alt+m')
+fi
+
+exit_code=$?
+
+if [ -z "$dom" ]; then
+    exit
+fi
+
+if [ "$(sudo virsh net-info default | grep Active | awk '{print $2}')" == "no" ]; then
+    notify-send "starting virtual network"
+    sudo virsh net-start default
+fi
+
+if [ "$(virsh domstate $dom)" != "running" ]; then
+    notify-send "starting vm $dom"
+    sudo virsh start $dom
+fi
+
+# start viewer based on exit code
+if [ $exit_code == 0 ]; then
+    virt-viewer --full-screen --wait --display=$display --domain-name $dom -c qemu:///system
+elif [ $exit_code == 10 ]; then
+    virt-manager --show-domain-console $dom -c qemu:///system
+fi
