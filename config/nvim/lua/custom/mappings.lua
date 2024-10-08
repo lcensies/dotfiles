@@ -17,6 +17,7 @@ M.disabled = {
     ["<C-l>"] = "",
     ["<C-j>"] = "",
     ["<C-k>"] = "",
+    ["<C-x>"] = "",
 
     -- Terminal toggling with alt is impossible due to the
     -- toggle
