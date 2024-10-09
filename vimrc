@@ -1,4 +1,4 @@
-set cident
+" set cident
 autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 set nocompatible
@@ -6,22 +6,9 @@ set encoding=UTF-8
 
 filetype plugin indent on
 
-# "Enter in line"
 noremap o e
 noremap E O
 
-" Pluigin installation using vim-plug "
-call plug#begin('~/.vim/plugged')
-  Plug 'preservim/nerdtree'
-  Plug 'morhetz/gruvbox'
-  Plug 'vim-airline/vim-airline'
-  Plug 'vim-airline/vim-airline-themes'
-  Plug 'Yggdroot/indentLine'
-  "Plug 'davidhalter/jedi-vim'
-  Plug 'tpope/vim-surround'
-"  Plug 'scrooloose/syntastic'
-"  Plug 'dense-analysis/ale'
-call plug#end()
 
 " Autocommands for special files "
 autocmd FileType make set noexpandtab " we want tabs in Makefiles
@@ -32,7 +19,6 @@ autocmd BufNewFile,BufRead *.py set ft=python tabstop=4 shiftwidth=4 softtabstop
 
 " Syntaxhighlighting, colorscheme, linenumbers "
 syntax on
-colorscheme gruvbox
 
 " Tabstop, Shiftwith and replace tabs with spaces but not in makefiles "
 set tabstop=2 " number of spaces in a tab
