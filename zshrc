@@ -1,17 +1,3 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-
-# Dont try to display a fancy theme in a tty
-# if [[ $TERM == "linux" ]]; then
-#   [[ ! -f ~/.p10k-portable.zsh ]] || source ~/.p10k-portable.zsh
-# else
-#   [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-# fi
-
 export EDITOR=nvim
 export VISUAL=nvim
 
@@ -76,11 +62,6 @@ compinit
 test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
 test -d ~/.scripts/priv && export PATH="$PATH:/home/${USER}/.scripts/priv"
 
-export NNN_PLUG='f:finder;o:fzopen;p:preview-tui;j:autojump'
-export NNN_FIFO=/tmp/nnn.fifo
-# export PATH="$PATH:/home/${USER}/nnn/plugins"
-
-#
 # Moving around words with ctrl + Arrow
 # TODO also add vim-like shortcuts
 # Other alternative is to set it in the Alacritty
@@ -100,31 +81,13 @@ function start_agent {
     /usr/bin/ssh-add >/dev/null 2>&1
 }
 
-# Source SSH settings, if applicable
-
-if [ -f "${SSH_ENV}" ]; then
-    . "${SSH_ENV}" > /dev/null
-    #ps ${SSH_AGENT_PID} doesn't work under cywgin
-    ps -ef | grep ${SSH_AGENT_PID} | grep ssh-agent$ > /dev/null || {
-        start_agent > /dev/null
-    }
-else
-    start_agent > /dev/null
-fi
-
-# Kill SSH agent on logout
-# TODO: https://unix.stackexchange.com/questions/90853/how-can-i-run-ssh-add-automatically-without-a-password-prompt
-trap 'test -n "$SSH_AUTH_SOCK" && eval `/usr/bin/ssh-agent -k`' 0
 
 
 # Autostart X server on login to get WM working without
 # typing startx each time after reboot
-if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-  exec startx
-fi
-
-
-
+# if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
+#   exec startx
+# fi
 
 # Configure tmux prompt
 # Not necesarry anymore due to plugin
@@ -141,19 +104,13 @@ screen*)
   ;;
 esac
 
-# Plugin rename-window requires customization
-# tmux-window-name() {
-# 	($TMUX_PLUGIN_MANAGER_PATH/tmux-window-name/scripts/rename_session_windows.py &)
-# }
 
 # Enter tmux if it's present
-if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-  # Set hook for windows renaming
-  #add-zsh-hook chpwd tmux-window-name
-  exec tmux
-  # https://www.reddit.com/r/tmux/comments/s5hpdz/how_to_prevent_tmux_from_creating_a_new_session/
-  # exec tmux new-session -A -s local
-fi
+# if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+#   exec tmux
+#   # https://www.reddit.com/r/tmux/comments/s5hpdz/how_to_prevent_tmux_from_creating_a_new_session/
+#   # exec tmux new-session -A -s local
+# fi
 
 # Initialize zoxide
 # --cmd j is handled by custom alias which performs 
@@ -194,7 +151,6 @@ function cd {
 }
 
 
-
 # Download antidote plugin manager if it's not present
 [[ -d ~/.antidote ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
 source ~/.antidote/antidote.zsh
@@ -204,7 +160,3 @@ if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
   exec startx
 fi
 
-# export  GO111MODULE="off"
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
