@@ -1,5 +1,13 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 export EDITOR=nvim
 export VISUAL=nvim
+export LIBVIRT_DEFAULT_URI=qemu:///system
 
 # Load completions
 autoload -Uz compinit && compinit
@@ -78,7 +86,8 @@ function start_agent {
     echo succeeded > /dev/null
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    /usr/bin/ssh-add >/dev/null 2>&1
+    find $HOME/.ssh | xargs /usr/bin/ssh-add >dev/null 2>&1
+    # /usr/bin/ssh-add >/dev/null 2>&1
 }
 
 
@@ -93,16 +102,16 @@ function start_agent {
 # Not necesarry anymore due to plugin
 # TODO: remove
 # https://that.guru/blog/automatically-set-tmux-window-name/
-case "$TERM" in
-linux|xterm*|rxvt*)
-  export PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}: ${PWD##*/}\007"'
-  ;;
-screen*)
-  export PROMPT_COMMAND='echo -ne "\033k${HOSTNAME%%.*}: ${PWD##*/}\033\\" '
-  ;;
-*)
-  ;;
-esac
+# case "$TERM" in
+# linux|xterm*|rxvt*)
+#   export PROMPT_COMMAND='echo -ne "\033]0;${HOSTNAME%%.*}: ${PWD##*/}\007"'
+#   ;;
+# screen*)
+#   export PROMPT_COMMAND='echo -ne "\033k${HOSTNAME%%.*}: ${PWD##*/}\033\\" '
+#   ;;
+# *)
+#   ;;
+# esac
 
 
 # Enter tmux if it's present
@@ -156,7 +165,6 @@ function cd {
 source ~/.antidote/antidote.zsh
 antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins 
 
-if [ -z "$DISPLAY" ] && [ "$XDG_VTNR" -eq 1 ]; then
-  exec startx
-fi
 
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
