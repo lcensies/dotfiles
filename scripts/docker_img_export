@@ -1,0 +1,44 @@
+#!/bin/bash
+
+set -e
+
+# Check for required arguments
+if [ "$#" -ne 2 ]; then
+  echo "Usage: $0 <docker_image> <image_size_MB>"
+  exit 1
+fi
+
+DOCKER_IMAGE="$1"
+IMAGE_SIZE_MB="$2"
+IMAGE_NAME=$(echo "$DOCKER_IMAGE" | tr '/:' '_')
+RAW_IMAGE="${IMAGE_NAME}.img"
+MOUNT_DIR="/mnt/${IMAGE_NAME}"
+TAR_FILE="${IMAGE_NAME}.tar"
+
+# Step 1: Save the Docker image as a tarball
+echo "[*] Saving Docker image to tarball..."
+docker save -o "$TAR_FILE" "$DOCKER_IMAGE"
+
+# Step 2: Create a raw image file and format it as ext4
+echo "[*] Creating raw image file..."
+dd if=/dev/zero of="$RAW_IMAGE" bs=1M count="$IMAGE_SIZE_MB" status=progress
+mkfs.ext4 "$RAW_IMAGE"
+
+# Step 3: Set up a loopback device
+LOOP_DEV=$(sudo losetup --show -f "$RAW_IMAGE")
+echo "[*] Created loopback device: $LOOP_DEV"
+
+# Step 4: Mount the filesystem
+sudo mkdir -p "$MOUNT_DIR"
+sudo mount "$LOOP_DEV" "$MOUNT_DIR"
+
+# Step 5: Extract tarball contents into the mounted directory
+echo "[*] Extracting Docker image contents..."
+sudo tar -xf "$TAR_FILE" -C "$MOUNT_DIR"
+
+# Step 6: Unmount and clean up
+echo "[*] Unmounting and detaching loopback device..."
+sudo umount "$MOUNT_DIR"
+sudo losetup -d "$LOOP_DEV"
+
+echo "[*] Done. Raw image: $RAW_IMAGE"

@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Usage:
+# qemu_nbd_mount /var/lib/libvirt/images/arch3.qcow2 3 /mnt
+# 3 - partition number
+
+FREEDEV=""
+SOURCE="$1"
+PARITION="$2"
+TARGET="$3"
+
+echo Mounting "$SOURCE" partition "$PARITION" to "$TARGET"
+
+sudo modprobe nbd max_part=8
+
+do_mount() {
+  sudo mkdir -p $TARGET 2>/dev/null
+  echo "Connecting $SOURCE to $FREEDEV"
+  sudo qemu-nbd --connect="$FREEDEV" $SOURCE
+  SRC_DEV="$FREEDEV""p$PARITION"
+  # echo Source device: $SRC_DEV
+  sleep 1
+  sudo mount $SRC_DEV $TARGET
+  exit
+}
+
+for dev in /sys/block/nbd*; do
+  [ ! -f "$dev/pid" ] && FREEDEV="/dev/$(basename $dev)" && do_mount
+done

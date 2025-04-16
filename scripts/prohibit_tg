@@ -1,0 +1,32 @@
+#!/bin/bash
+
+RESTRICTED_PERIODS=(
+  "09:00-12:00" # Work morning
+  "13:00-18:00" # Work afternoon
+  "00:00-06:00" # Sleep time
+)
+
+# Application to restrict
+RESTRICTED_APP="telegram"
+
+while true; do
+  CURRENT_TIME=$(date +"%H:%M")
+
+  for PERIOD in "${RESTRICTED_PERIODS[@]}"; do
+    START_TIME=${PERIOD%-*}
+    END_TIME=${PERIOD#*-}
+
+    if [[ "$START_TIME" < "$END_TIME" && "$CURRENT_TIME" > "$START_TIME" && "$CURRENT_TIME" < "$END_TIME" ]] ||
+      [[ "$START_TIME" > "$END_TIME" && ("$CURRENT_TIME" > "$START_TIME" || "$CURRENT_TIME" < "$END_TIME") ]]; then
+      PID=$(pgrep -f "$RESTRICTED_APP")
+      if [ -n "$PID" ]; then
+        pkill -f $RESTRICTED_APP
+        # kill "$PID"
+        notify-send "Restricted Time" "Cannot use $RESTRICTED_APP during restricted hours"
+      fi
+      break
+    fi
+  done
+
+  sleep 1
+done

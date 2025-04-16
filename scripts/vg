@@ -1,4 +1,8 @@
 #!/bin/bash
 
-which vagrant_libvirt 2>/dev/null && vagrant_libvirt $@ && exit 
-which vagrant 2>/dev/null && vagrant $@ && exit 
+_vg_libvirt() {
+  which vagrant_libvirt 2>/dev/null && vagrant_libvirt $@ && exit
+  which vagrant 2>/dev/null && vagrant $@ && exit
+}
+
+/usr/bin/vagrant $@

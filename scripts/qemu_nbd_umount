@@ -1,0 +1,11 @@
+#!/bin/bash
+
+# Usage:
+# qemu_nbd_umount /mnt
+
+MOUNT_TARGET="$1"
+MOUNT_DEVICE="$(cat /etc/mtab | grep $MOUNT_TARGET | cut -d ' ' -f 1)"
+
+sudo umount -l $MOUNT_TARGET
+sudo qemu-nbd --disconnect $MOUNT_DEVICE
+sleep 0.5
