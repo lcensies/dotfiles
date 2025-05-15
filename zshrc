@@ -86,10 +86,11 @@ function start_agent {
     echo succeeded > /dev/null
     chmod 600 "${SSH_ENV}"
     . "${SSH_ENV}" > /dev/null
-    find $HOME/.ssh | xargs /usr/bin/ssh-add >dev/null 2>&1
+    find $HOME/.ssh | xargs /usr/bin/ssh-add > /dev/null 2>&1
     # /usr/bin/ssh-add >/dev/null 2>&1
 }
 
+start_agent
 
 
 # Autostart X server on login to get WM working without
