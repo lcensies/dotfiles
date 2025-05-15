@@ -5,4 +5,4 @@ _vg_libvirt() {
   which vagrant 2>/dev/null && vagrant $@ && exit
 }
 
-/usr/bin/vagrant $@
+_vg_libvirt $@
