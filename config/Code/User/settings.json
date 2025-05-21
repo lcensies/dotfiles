@@ -1,0 +1,7 @@
+{
+    "rust-analyzer.debug.engine": "vadimcn.vscode-lldb",
+    "editor.minimap.enabled": false,
+    "editor.lineNumbers": "relative",
+    "window.menuBarVisibility": "compact",
+    "vim.useSystemClipboard": true,
+}
