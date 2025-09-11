@@ -1,0 +1,224 @@
+
+
+# List displays
+# swaymsg --type get_outputs
+
+# Logo key. Use Mod1 for Alt.
+set $mod Mod4
+# Home row direction keys, like vim
+set $left h
+set $down j
+set $up k
+set $right l
+
+# Terminal
+set $term alacritty
+
+# Colors
+# class                 border  backgr. text    indicator child_border
+client.focused          #999999 #5f676a #999999 #999999   #999999
+client.focused_inactive #999999 #5f676a #999999 #999999   #999999
+client.unfocused        #333333 #222222 #888888 #292d2e   #1f1e1e
+client.urgent           #999999 #5f676a #999999 #999999   #999999
+client.placeholder      #000000 #0c0c0c #ffffff #000000   #0c0c0c
+
+client.background       #ffffff
+
+default_border pixel 1
+
+
+
+# Scaling
+
+set $system_dpi_scaling_factor 2.5
+set $cursor_size 1024
+set $system_theme 'Arc-Dark'
+
+exec swaymsg output eDP-1 scale $system_dpi_scaling_factor
+
+set $gnome-schema org.gnome.desktop.interface
+exec_always {
+  gsettings set $gnome-schema text-scaling-factor $system_dpi_scaling_factor
+  gsettings set $gnome-schema cursor-size $cursor_size
+}
+
+seat seat0 xcursor_theme $cursor_theme $cursor_size
+
+# Wallpaper
+# output * bg /home/esc2/nixos-config/wallpaper.png fill
+
+# Key bindings
+    # Start a terminal
+    bindsym $mod+Return exec $term
+
+    # Kill focused window
+    bindsym $mod+Shift+q kill
+
+    # Drag floating windows by holding down $mod and left mouse button.
+    # Resize them with right mouse button + $mod.
+    # Despite the name, also works for non-floating windows.
+    # Change normal to inverse to use left mouse button for resizing and right
+    # mouse button for dragging.
+    floating_modifier $mod normal
+
+    # Reload the configuration file
+    bindsym $mod+Shift+c reload
+
+    # Screenshots
+    bindsym $mod+s exec grim  -g "$(slurp)" ~/Desktop/Pictures/Screenshots/Screenshot-$(date +'%H:%M:%S.png')
+
+
+# Moving around:
+    # Move your focus around
+    bindsym $mod+$left focus left
+    bindsym $mod+$down focus down
+    bindsym $mod+$up focus up
+    bindsym $mod+$right focus right
+    # Or use $mod+[up|down|left|right]
+    bindsym $mod+Left focus left
+    bindsym $mod+Down focus down
+    bindsym $mod+Up focus up
+    bindsym $mod+Right focus right
+
+    # Move the focused window with the same, but add Shift
+    bindsym $mod+Shift+$left move left
+    bindsym $mod+Shift+$down move down
+    bindsym $mod+Shift+$up move up
+    bindsym $mod+Shift+$right move right
+    # Ditto, with arrow keys
+    bindsym $mod+Shift+Left move left
+    bindsym $mod+Shift+Down move down
+    bindsym $mod+Shift+Up move up
+    bindsym $mod+Shift+Right move right
+
+# Workspaces:
+    # Switch to workspace
+    bindsym $mod+1 workspace number 1
+    bindsym $mod+2 workspace number 2
+    bindsym $mod+3 workspace number 3
+    bindsym $mod+4 workspace number 4
+    bindsym $mod+5 workspace number 5
+    bindsym $mod+6 workspace number 6
+    # Move focused container to workspace
+    bindsym $mod+Shift+1 move container to workspace number 1
+    bindsym $mod+Shift+2 move container to workspace number 2
+    bindsym $mod+Shift+3 move container to workspace number 3
+    bindsym $mod+Shift+4 move container to workspace number 4
+    bindsym $mod+Shift+5 move container to workspace number 5
+    bindsym $mod+Shift+6 move container to workspace number 6
+
+# Media keys
+# Brightness
+bindsym XF86MonBrightnessDown exec light -U 10
+bindsym XF86MonBrightnessUp exec light -A 10
+
+# Volume
+bindsym XF86AudioMute exec 'pulsemixer --toggle-mute'
+
+# Layout stuff:
+    # Split verticaly =
+    bindsym $mod+v splitv
+
+    # Split horizontaly ||
+    #bindsym $mod+h splith
+
+    # Make the current focus fullscreen
+    bindsym $mod+f fullscreen
+
+    # Toggle the current focus between tiling and floating mode
+    bindsym $mod+Shift+space floating toggle
+
+# Resizing containers:
+mode "resize" {
+    bindsym $left resize shrink width 10px
+    bindsym $down resize grow height 10px
+    bindsym $up resize shrink height 10px
+    bindsym $right resize grow width 10px
+
+    # Ditto, with arrow keys
+    bindsym Left resize shrink width 10px
+    bindsym Down resize grow height 10px
+    bindsym Up resize shrink height 10px
+    bindsym Right resize grow width 10px
+
+    # Return to default mode
+    bindsym Return mode "default"
+    bindsym Escape mode "default"
+}
+
+bindsym $mod+r mode "resize"
+
+input "type:touchpad" {
+    dwt enabled
+    tap enabled
+    middle_emulation enabled
+}
+
+input "1:1:AT_Translated_Set_2_keyboard" {
+    xkb_layout "us,ru"
+    xkb_options "grp:alt_shift_toggle"
+}
+
+# Waybar
+# exec waybar &
+
+# Autotiling
+exec autotiling-rs
+
+# application launcher
+set $launcher "rofi -show combi -modes combi -combi-modes 'window,drun' -show-icons -theme ~/.config/rofi-sway/rounded-nord-dark.rasi"
+# set $wifi "~/.config/rofi/rofi-iwd-menu"
+# set $wifi \''swaymsg 'for_window [title="myfloat"] floating enable, move position center; exec alacritty --title myfloat -e impala\''
+
+# https://github.com/loserMcloser/waylogout.git
+set $powermgr "rofi -show power-menu -theme ~/.config/rofi/rounded-nord-dark.rasi -modi power-menu:~/.config/rofi-sway/rofi-power-menu"
+set $bluetooth "~/.config/rofi/rofi-bluetooth -theme ~/.config/rofi/rounded-nord-dark.rasi"
+set $volume "~/.config/rofi/rofi-volume"
+
+# wifi switcher
+# bluetooth control
+#
+bindsym Mod4+space exec $launcher
+bindsym $mod+Shift+p exec $powermgr
+bindsym $mod+Shift+v exec $volume
+# bindsym $mod+Shift+w exec $wifi
+# bindsym $mod+Shift+b exec $bluetooth
+
+bindsym $mod+Shift+w exec swaymsg 'for_window [title="myfloat"] floating enable, move position center; exec alacritty --title myfloat -e impala'
+bindsym $mod+Shift+b exec swaymsg 'for_window [title="myfloat"] floating enable, move position center; exec alacritty --title myfloat -e bluetuith'
+
+
+
+# Startup
+
+assign [app_id="qutebrowser"] workspace number 1
+assign [app_id="terminal1"] workspace number 2
+# todo: messenger
+assign [app_id="codium-url-handler"] workspace number 4
+
+exec alacritty --class "terminal1" &
+exec qutebrowser &
+exec codium --ozone-platform-hint=auto &
+
+#Window rules
+for_window [app_id="com.github.finefindus.eyedropper"] floating enable
+
+# -i ~/.cache/lockscreen
+exec swayidle idlehint 1
+set $locker 'swaylock -f -e -c 1d2021 --inside-color 000000b3 -s fill '
+set $screen_off exec "swaylock -f -e -c 1d2021 --inside-color 000000b3 -s fill"
+bindsym $mod+Shift+s exec "swaylock -f -e -c 1d2021 --inside-color 000000b3 -s fill"
+exec swayidle -w \
+    timeout 1800 'media pause' \
+    timeout 1800 $locker \
+    timeout 900 'swaymsg "output * dpms off"' \
+    timeout 15 'if pgrep -x swaylock; then swaymsg "output * dpms off"; fi' \
+    resume 'swaymsg "output * dpms on"' \
+    before-sleep $locker
+
+# Fixes
+exec dbus-sway-environment
+exec configure-gtk
+exec systemctl --user import-environment
+
+include @sysconfdir@/sway/config.d/*
