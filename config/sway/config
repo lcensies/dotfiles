@@ -12,7 +12,7 @@ set $up k
 set $right l
 
 # Terminal
-set $term alacritty
+set $term kitty
 
 # Colors
 # class                 border  backgr. text    indicator child_border
@@ -30,8 +30,9 @@ default_border pixel 1
 
 # Scaling
 
-set $system_dpi_scaling_factor 2.5
-set $cursor_size 1024
+set $system_dpi_scaling_factor 3.0
+set $cursor_size 128
+set $cursor_theme "capitaine-cursors-white"
 set $system_theme 'Arc-Dark'
 
 exec swaymsg output eDP-1 scale $system_dpi_scaling_factor
@@ -50,6 +51,7 @@ seat seat0 xcursor_theme $cursor_theme $cursor_size
 # Key bindings
     # Start a terminal
     bindsym $mod+Return exec $term
+    bindsym Mod1+Return exec $term
 
     # Kill focused window
     bindsym $mod+Shift+q kill
@@ -66,6 +68,11 @@ seat seat0 xcursor_theme $cursor_theme $cursor_size
 
     # Screenshots
     bindsym $mod+s exec grim  -g "$(slurp)" ~/Desktop/Pictures/Screenshots/Screenshot-$(date +'%H:%M:%S.png')
+    # Screenshot to clipboard (rectangular selection)
+    bindsym Shift+$mod+s exec grim -g "$(slurp)" - | wl-copy
+
+    # Lock screen and suspend
+    bindsym Ctrl+$mod+l exec swaylock & systemctl suspend
 
 
 # Moving around:
@@ -171,14 +178,14 @@ set $launcher "rofi -show combi -modes combi -combi-modes 'window,drun' -show-ic
 # set $wifi \''swaymsg 'for_window [title="myfloat"] floating enable, move position center; exec alacritty --title myfloat -e impala\''
 
 # https://github.com/loserMcloser/waylogout.git
-set $powermgr "rofi -show power-menu -theme ~/.config/rofi/rounded-nord-dark.rasi -modi power-menu:~/.config/rofi-sway/rofi-power-menu"
+set $powermgr "rofi -show power-menu -theme ~/.config/rofi/rounded-nord-dark.rasi -modi power-menu:/home/esc2/.dotfiles/scripts/rofi-power-menu"
 set $bluetooth "~/.config/rofi/rofi-bluetooth -theme ~/.config/rofi/rounded-nord-dark.rasi"
 set $volume "~/.config/rofi/rofi-volume"
 
 # wifi switcher
 # bluetooth control
 #
-bindsym Mod4+space exec $launcher
+bindsym Mod1+space exec $launcher
 bindsym $mod+Shift+p exec $powermgr
 bindsym $mod+Shift+v exec $volume
 # bindsym $mod+Shift+w exec $wifi
@@ -207,7 +214,7 @@ for_window [app_id="com.github.finefindus.eyedropper"] floating enable
 exec swayidle idlehint 1
 set $locker 'swaylock -f -e -c 1d2021 --inside-color 000000b3 -s fill '
 set $screen_off exec "swaylock -f -e -c 1d2021 --inside-color 000000b3 -s fill"
-bindsym $mod+Shift+s exec "swaylock -f -e -c 1d2021 --inside-color 000000b3 -s fill"
+# bindsym $mod+Shift+s exec "swaylock -f -e -c 1d2021 --inside-color 000000b3 -s fill"
 exec swayidle -w \
     timeout 1800 'media pause' \
     timeout 1800 $locker \

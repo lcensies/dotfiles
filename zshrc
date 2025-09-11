@@ -1,9 +1,5 @@
-# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
-# Initialization code that may require console input (password prompts, [y/n]
-# confirmations, etc.) must go above this block; everything else may go below.
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
+# Initialize Starship prompt
+eval "$(starship init zsh)"
 
 export EDITOR=nvim
 export VISUAL=nvim
@@ -90,7 +86,10 @@ function start_agent {
     # /usr/bin/ssh-add >/dev/null 2>&1
 }
 
-start_agent
+# Don't start SSH agent on NixOS (it's managed by the system)
+if [ ! -f /etc/nixos/configuration.nix ] && [ ! -f /etc/nixos/flake.nix ]; then
+    start_agent
+fi
 
 
 # Autostart X server on login to get WM working without
@@ -115,21 +114,32 @@ start_agent
 # esac
 
 
-# Enter tmux if it's present
-# if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
-#   exec tmux
-#   # https://www.reddit.com/r/tmux/comments/s5hpdz/how_to_prevent_tmux_from_creating_a_new_session/
-#   # exec tmux new-session -A -s local
-# fi
+# Enter tmux if it's present and not already in tmux
+if command -v tmux &> /dev/null && [ -n "$PS1" ] && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [ -z "$TMUX" ]; then
+  # Check if we're in an SSH session
+  if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+    # SSH session - attach to existing session or create new one
+    exec tmux new-session -A -s ssh
+  else
+    # Local session - attach to existing session or create new one
+    exec tmux new-session -A -s local
+  fi
+fi
 
 # Initialize zoxide
 # --cmd j is handled by custom alias which performs 
 # cd . with additional logic
 which zoxide >/dev/null && eval "$(zoxide init  zsh)"
 
+
+if command -v atuin >/dev/null 2>&1; then
+  eval "$(atuin init zsh)"
+fi
+
 # Source fzf completions
-source /usr/share/fzf/key-bindings.zsh 2>/dev/null
-source /usr/share/fzf/completion.zsh 2>/dev/null
+# if command -v fzf >/dev/null 2>&1; then
+#   eval "$(fzf --zsh)"
+# fi
 
 function handle_venv {
   if [[ -z "$VIRTUAL_ENV" ]] ; then
@@ -164,8 +174,4 @@ function cd {
 # Download antidote plugin manager if it's not present
 [[ -d ~/.antidote ]] || git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
 source ~/.antidote/antidote.zsh
-antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins 
-
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins
