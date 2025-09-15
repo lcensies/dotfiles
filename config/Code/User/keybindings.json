@@ -138,4 +138,8 @@
         "command": "-workbench.action.terminal.killEditor",
         "when": "terminalEditorFocus && terminalFocus && terminalHasBeenCreated || terminalEditorFocus && terminalFocus && terminalProcessSupported"
     },
+    {
+        "key": "ctrl+shift+a",
+        "command": "composerMode.agent"
+    },
 ]

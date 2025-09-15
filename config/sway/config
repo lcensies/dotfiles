@@ -30,16 +30,18 @@ default_border pixel 1
 
 # Scaling
 
-set $system_dpi_scaling_factor 3.0
-set $cursor_size 128
+set $system_dpi_scaling_factor 2.0
+set $text_scaling_factor 1.5
+set $cursor_size 64
 set $cursor_theme "capitaine-cursors-white"
 set $system_theme 'Arc-Dark'
 
-exec swaymsg output eDP-1 scale $system_dpi_scaling_factor
+output eDP-1 scale $system_dpi_scaling_factor
+output eDP-1 scale_filter smart
 
 set $gnome-schema org.gnome.desktop.interface
 exec_always {
-  gsettings set $gnome-schema text-scaling-factor $system_dpi_scaling_factor
+  gsettings set $gnome-schema text-scaling-factor $text_scaling_factor
   gsettings set $gnome-schema cursor-size $cursor_size
 }
 
@@ -55,6 +57,7 @@ seat seat0 xcursor_theme $cursor_theme $cursor_size
 
     # Kill focused window
     bindsym $mod+Shift+q kill
+    bindsym Shift+$mod+q kill
 
     # Drag floating windows by holding down $mod and left mouse button.
     # Resize them with right mouse button + $mod.
@@ -70,6 +73,9 @@ seat seat0 xcursor_theme $cursor_theme $cursor_size
     bindsym $mod+s exec grim  -g "$(slurp)" ~/Desktop/Pictures/Screenshots/Screenshot-$(date +'%H:%M:%S.png')
     # Screenshot to clipboard (rectangular selection)
     bindsym Shift+$mod+s exec grim -g "$(slurp)" - | wl-copy
+
+    # Keyboard layout switching (manual fallback)
+    bindsym $mod+space exec swaymsg input "1:1:AT_Translated_Set_2_keyboard" xkb_switch_layout next
 
     # Lock screen and suspend
     bindsym Ctrl+$mod+l exec swaylock & systemctl suspend
@@ -121,6 +127,8 @@ bindsym XF86MonBrightnessUp exec light -A 10
 
 # Volume
 bindsym XF86AudioMute exec 'pulsemixer --toggle-mute'
+bindsym XF86AudioLowerVolume exec 'pulsemixer --change-volume -5'
+bindsym XF86AudioRaiseVolume exec 'pulsemixer --change-volume +5'
 
 # Layout stuff:
     # Split verticaly =
@@ -163,7 +171,7 @@ input "type:touchpad" {
 
 input "1:1:AT_Translated_Set_2_keyboard" {
     xkb_layout "us,ru"
-    xkb_options "grp:alt_shift_toggle"
+    xkb_options "grp:win_space_toggle,grp_led:scroll"
 }
 
 # Waybar

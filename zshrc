@@ -65,6 +65,8 @@ compinit
 # Scripts
 test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
 test -d ~/.scripts/priv && export PATH="$PATH:/home/${USER}/.scripts/priv"
+test -d ~/.local/bin && export PATH="$HOME/.local/bin:$PATH"
+test -d ~/.local/bin/distrobox-exported && export PATH="$HOME/.local/bin/distrobox-exported:$PATH"
 
 # Moving around words with ctrl + Arrow
 # TODO also add vim-like shortcuts

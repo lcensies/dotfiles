@@ -4,4 +4,8 @@
     "editor.lineNumbers": "relative",
     "window.menuBarVisibility": "compact",
     "vim.useSystemClipboard": true,
+    "remote.SSH.remotePlatform": {
+        "fedora": "linux"
+    },
+    "git.confirmSync": false,
 }

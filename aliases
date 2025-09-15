@@ -79,3 +79,7 @@ alias vgd="vagrant destroy"
 
 # Virtualbox
 alias vb="VBoxManage"
+
+
+# Cursor
+alias ca="~/.local/bin/distrobox_exported/cursor-agent"
