@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # $1 -> other project directory
 # $2 -> commit SHA

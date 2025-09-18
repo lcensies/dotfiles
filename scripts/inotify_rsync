@@ -1,10 +1,8 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Define source and destination directories
 src="$1"
 dest="$2"
-
-#!/bin/bash
 while inotifywait -r -e modify,create,delete,move $src; do
     # delete after will also replicates delete in src folder
     rsync -avz $src $dest # --delete-after

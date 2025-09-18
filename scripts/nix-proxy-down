@@ -1,6 +1,6 @@
-#!/run/current-system/sw/bin/bash
+#!/usr/bin/env bash
 
-# Script to disable sing-box tunnel by commenting the configuration
+# Script to disable sing-box tunnel by commenting the import
 # and rebuilding NixOS
 
 set -e
@@ -14,64 +14,11 @@ if [ ! -f "$BACKUP_FILE" ]; then
     echo "Created backup at $BACKUP_FILE"
 fi
 
-# Function to find and comment sing-box and proxy settings
-comment_range() {
-    local file=$1
-    
-    echo "Searching for sing-box and proxy configurations..."
-    
-    # Find sing-box service configuration
-    local singbox_start=$(grep -n "services\.sing-box" "$file" | head -1 | cut -d: -f1)
-    if [ -n "$singbox_start" ]; then
-        local singbox_end=$(awk -v start="$singbox_start" 'NR >= start && /^[[:space:]]*};[[:space:]]*$/ && NF == 1 {print NR; exit}' "$file")
-        if [ -n "$singbox_end" ]; then
-            echo "Commenting sing-box service configuration (lines $singbox_start-$singbox_end)"
-            sed -i "${singbox_start},${singbox_end}s/^  /  #/" "$file"
-        fi
-    fi
-    
-    # Find proxy environment variables
-    local proxy_start=$(grep -n "environment\.variables" "$file" | head -1 | cut -d: -f1)
-    if [ -n "$proxy_start" ]; then
-        local proxy_end=$(awk -v start="$proxy_start" 'NR >= start && /^[[:space:]]*};[[:space:]]*$/ && NF == 1 {print NR; exit}' "$file")
-        if [ -n "$proxy_end" ]; then
-            echo "Commenting proxy environment variables (lines $proxy_start-$proxy_end)"
-            sed -i "${proxy_start},${proxy_end}s/^  /  #/" "$file"
-        fi
-    fi
-    
-    # Find systemd service environment
-    local systemd_env_start=$(grep -n "systemd\.services.*sing-box.*environment" "$file" | head -1 | cut -d: -f1)
-    if [ -n "$systemd_env_start" ]; then
-        local systemd_env_end=$(awk -v start="$systemd_env_start" 'NR >= start && /^[[:space:]]*};[[:space:]]*$/ && NF == 1 {print NR; exit}' "$file")
-        if [ -n "$systemd_env_end" ]; then
-            echo "Commenting systemd service environment (lines $systemd_env_start-$systemd_env_end)"
-            sed -i "${systemd_env_start},${systemd_env_end}s/^  /  #/" "$file"
-        fi
-    fi
-    
-    # Find systemd service ExecStart
-    local execstart_start=$(grep -n "systemd\.services.*sing-box.*serviceConfig\.ExecStart" "$file" | head -1 | cut -d: -f1)
-    if [ -n "$execstart_start" ]; then
-        local execstart_end=$(awk -v start="$execstart_start" 'NR >= start && /^[[:space:]]*];[[:space:]]*$/ && NF == 1 {print NR; exit}' "$file")
-        if [ -n "$execstart_end" ]; then
-            echo "Commenting systemd service ExecStart (lines $execstart_start-$execstart_end)"
-            sed -i "${execstart_start},${execstart_end}s/^  /  #/" "$file"
-        fi
-    fi
-    
-    # Find trusted interfaces (single line)
-    local trusted_start=$(grep -n "networking\.firewall\.trustedInterfaces" "$file" | head -1 | cut -d: -f1)
-    if [ -n "$trusted_start" ]; then
-        echo "Commenting trusted interfaces (line $trusted_start)"
-        sed -i "${trusted_start}s/^  /  #/" "$file"
-    fi
-}
-
 echo "Disabling sing-box tunnel configuration..."
 
-# Comment all sing-box and proxy configurations dynamically
-comment_range "$CONFIG_FILE"
+# Comment the sing-box import line
+sed -i 's/^  # Import sing-box configuration$/  # Import sing-box configuration/' "$CONFIG_FILE"
+sed -i 's/^  imports = \[ \.\/sing-box\.nix \];$/  # imports = [ .\/sing-box.nix ];/' "$CONFIG_FILE"
 
 echo "Configuration updated. Rebuilding NixOS..."
 

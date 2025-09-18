@@ -231,6 +231,8 @@ local plugins = {
         "markdown_inline",
 
         "vimdoc",
+
+        "nix"
       },
     },
   },

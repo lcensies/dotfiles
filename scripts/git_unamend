@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Move the current head so that it's pointing at the old commit
 # Leave the index intact for redoing the commit.

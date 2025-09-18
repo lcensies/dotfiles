@@ -1,3 +1,3 @@
-#!/bin/bash
+#!/usr/bin/env bash
 xdotool getwindowfocus getwindowgeometry --shell | grep -E 'WIDTH|HEIGHT|X|Y' | while read line; do eval $line; done && xdotool mousemove $((X + WIDTH / 2)) $((Y + HEIGHT / 2))
 

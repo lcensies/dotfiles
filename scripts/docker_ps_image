@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Find docker container by image passed as first parameter.
 # Other positional args are passed to the docker

@@ -1,5 +1,10 @@
+# Profiling version of zshrc - adds timing to identify slow sections
 # Initialize Starship prompt (only if not using Powerlevel10k)
 # eval "$(starship init zsh)"
+
+# Start profiling
+PROFILE_START=$(date +%s%N)
+echo "ZSH Profile: Starting zshrc at $(date)" > /tmp/zsh_profile.log
 
 export EDITOR=nvim
 export VISUAL=nvim
@@ -13,6 +18,9 @@ if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+24) ]]; then
 else
   compinit -C
 fi
+
+PROFILE_COMPINIT=$(date +%s%N)
+echo "ZSH Profile: After compinit: $(( (PROFILE_COMPINIT - PROFILE_START) / 1000000 ))ms" >> /tmp/zsh_profile.log
 
 # Doesn't work for some reason. 
 # Anyway, jo . can be used as alternative
@@ -60,9 +68,14 @@ zstyle ':completion:*' menu select
 # TODO: parametrize user name
 zstyle :compinstall filename "/home/$USER/.zshrc"
 
+PROFILE_BASIC=$(date +%s%N)
+echo "ZSH Profile: After basic config: $(( (PROFILE_BASIC - PROFILE_COMPINIT) / 1000000 ))ms" >> /tmp/zsh_profile.log
 
 # Aliases
 [[ -f ~/.aliases ]] && source ~/.aliases
+
+PROFILE_ALIASES=$(date +%s%N)
+echo "ZSH Profile: After aliases: $(( (PROFILE_ALIASES - PROFILE_BASIC) / 1000000 ))ms" >> /tmp/zsh_profile.log
 
 # Scripts
 test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
@@ -77,9 +90,7 @@ test -d ~/.local/bin/distrobox-exported && export PATH="$HOME/.local/bin/distrob
 bindkey "^[[1;5C" forward-word
 bindkey "^[[1;5D" backward-word
 
-
 # SSH agent is managed by the system on NixOS, no need for manual setup
-
 
 # Autostart X server on login to get WM working without
 # typing startx each time after reboot
@@ -102,6 +113,8 @@ bindkey "^[[1;5D" backward-word
 #   ;;
 # esac
 
+PROFILE_PATHS=$(date +%s%N)
+echo "ZSH Profile: After paths: $(( (PROFILE_PATHS - PROFILE_ALIASES) / 1000000 ))ms" >> /tmp/zsh_profile.log
 
 # Enter tmux if it's present and not already in tmux (only in interactive shells)
 if [[ -n "$PS1" ]] && command -v tmux &> /dev/null && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [[ -z "$TMUX" ]] && [[ -t 0 ]]; then
@@ -122,27 +135,19 @@ if [[ -n "$PS1" ]]; then
   # cd . with additional logic
   command -v zoxide >/dev/null && eval "$(zoxide init zsh)"
 
-  # Atuin will be initialized after plugins are loaded
+  # Initialize atuin
+  if command -v atuin >/dev/null 2>&1; then
+    eval "$(atuin init zsh)"
+  fi
 fi
+
+PROFILE_TOOLS=$(date +%s%N)
+echo "ZSH Profile: After tools: $(( (PROFILE_TOOLS - PROFILE_PATHS) / 1000000 ))ms" >> /tmp/zsh_profile.log
 
 # Source fzf completions
-if command -v fzf >/dev/null 2>&1; then
-  eval "$(fzf --zsh)"
-fi
-
-# Configure fzf-tab
-if command -v fzf-tab >/dev/null 2>&1; then
-  # Disable sort when completing `git checkout`
-  zstyle ':completion:*:git-checkout:*' sort false
-  # Set descriptions format to enable group support
-  zstyle ':completion:*:descriptions' format '[%d]'
-  # Set list-colors to show directories with different colors
-  zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
-  # Preview directory's content with exa when completing cd
-  zstyle ':fzf-tab:complete:cd:*' fzf-preview 'exa -1 --color=always $realpath'
-  # Switch group using `,` and `.`
-  zstyle ':fzf-tab:*' switch-group ',' '.'
-fi
+# if command -v fzf >/dev/null 2>&1; then
+#   eval "$(fzf --zsh)"
+# fi
 
 # Virtual environment handling (only in interactive shells)
 if [[ -n "$PS1" ]]; then
@@ -176,6 +181,9 @@ if [[ -n "$PS1" ]]; then
   }
 fi
 
+PROFILE_VENV=$(date +%s%N)
+echo "ZSH Profile: After venv: $(( (PROFILE_VENV - PROFILE_TOOLS) / 1000000 ))ms" >> /tmp/zsh_profile.log
+
 # Download antidote plugin manager if it's not present (only if needed)
 if [[ ! -d ~/.antidote ]]; then
   git clone --depth=1 https://github.com/mattmc3/antidote.git ~/.antidote
@@ -185,10 +193,11 @@ fi
 if [[ -n "$PS1" ]]; then
   source ~/.antidote/antidote.zsh
   antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins
-  
-  # Initialize atuin after plugins are loaded to avoid keybinding conflicts
-  if command -v atuin >/dev/null 2>&1; then
-    eval "$(atuin init zsh)"
-  fi
 fi
-#
+
+PROFILE_PLUGINS=$(date +%s%N)
+echo "ZSH Profile: After plugins: $(( (PROFILE_PLUGINS - PROFILE_VENV) / 1000000 ))ms" >> /tmp/zsh_profile.log
+
+PROFILE_END=$(date +%s%N)
+echo "ZSH Profile: Total time: $(( (PROFILE_END - PROFILE_START) / 1000000 ))ms" >> /tmp/zsh_profile.log
+echo "ZSH Profile: Completed at $(date)" >> /tmp/zsh_profile.log

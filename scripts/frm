@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 
 # Quickly removes the directory with large number of files
 # Taken from https://unix.stackexchange.com/questions/37329/efficiently-delete-large-directory-containing-thousands-of-files

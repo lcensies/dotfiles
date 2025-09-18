@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # WARNING: fix for tiling WMs is needed
 # Turns arbitrary terminal emulator to dropdown

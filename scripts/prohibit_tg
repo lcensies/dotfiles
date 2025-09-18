@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 RESTRICTED_PERIODS=(
   "09:00-12:00" # Work morning

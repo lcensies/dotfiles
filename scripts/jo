@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env zsh
 
 # Jump to directory, select file with fzf and open it in default application
 

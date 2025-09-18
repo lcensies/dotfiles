@@ -1,2 +1,2 @@
-#!/bin/sh
+#!/usr/bin/env bash
 termdown $1m && play ~/Music/alarm-clock-short.mp3 2>/dev/null 

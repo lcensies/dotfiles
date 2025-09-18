@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 virsh list --name | while read n
 do
