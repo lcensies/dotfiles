@@ -61,7 +61,7 @@ shape = "Underline"
 TERM = "alacritty"
 
 [font]
-size = 16
+size = 13
 
 [font.bold]
 family = "JetBrains Mono"
@@ -85,7 +85,7 @@ history = 100000
 multiplier = 3
 
 [terminal.shell]
-program = "/bin/zsh"
+program = "/home/esc2/.scripts/zsh-launcher"
 
 [window]
 opacity = 0.9
