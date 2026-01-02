@@ -10,8 +10,8 @@ BACKUP_FILE="/home/esc2/repos/nixos/nixos/networking/default.nix.backup"
 
 # Create backup if it doesn't exist
 if [ ! -f "$BACKUP_FILE" ]; then
-    cp "$CONFIG_FILE" "$BACKUP_FILE"
-    echo "Created backup at $BACKUP_FILE"
+  cp "$CONFIG_FILE" "$BACKUP_FILE"
+  echo "Created backup at $BACKUP_FILE"
 fi
 
 echo "Disabling sing-box tunnel configuration..."
@@ -27,3 +27,8 @@ cd /home/esc2/repos/nixos
 make tb14
 
 echo "NixOS rebuild completed. Sing-box tunnel is now disabled."
+
+sudo systemctl restart systemd-resolved
+
+echo "Systemd-resolved was restarted"
+

@@ -1,0 +1,3 @@
+#!/usr/bin/env zsh
+
+NO_TMUX=true zsh

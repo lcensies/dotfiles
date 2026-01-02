@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+import sys
+import json
+
+def main():
+    if len(sys.argv) != 2:
+        print(f"Usage: {sys.argv[0]} <input_file>")
+        sys.exit(1)
+
+    input_filename = sys.argv[1]
+    
+    try:
+        with open(input_filename) as input_file:
+            with open(f"{input_filename}.json", "w") as output_file:
+                json.dump([line.strip() for line in input_file.readlines()], output_file)
+    except FileNotFoundError:
+        print(f"Error: Could not find file '{input_filename}'")
+        sys.exit(1)
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
