@@ -1,0 +1,22 @@
+(
+    address: "127.0.0.1:6600",
+    theme: None,
+    volume_step: 5,
+    enable_mouse: true,
+    keybinds: (
+        play_pause: " ",
+        stop: "s",
+        next: "n",
+        previous: "p",
+        volume_up: "+",
+        volume_down: "-",
+        seek_forward: "→",
+        seek_backward: "←",
+        toggle_repeat: "r",
+        toggle_random: "z",
+        toggle_single: "y",
+        toggle_consume: "c",
+        quit: "q",
+    ),
+)
+
