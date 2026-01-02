@@ -1,5 +1,5 @@
 # Initialize Starship prompt (only if not using Powerlevel10k)
-# eval "$(starship init zsh)"
+eval "$(starship init zsh)"
 
 export EDITOR=nvim
 export VISUAL=nvim
@@ -64,6 +64,9 @@ zstyle :compinstall filename "/home/$USER/.zshrc"
 # Aliases
 [[ -f ~/.aliases ]] && source ~/.aliases
 
+
+export XDG_DATA_DIRS="/home/$USER/.nix-profile/share:$XDG_DATA_DIRS"
+
 # Scripts
 test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
 test -d ~/.scripts/priv && export PATH="$PATH:/home/${USER}/.scripts/priv"
@@ -104,7 +107,14 @@ bindkey "^[[1;5D" backward-word
 
 
 # Enter tmux if it's present and not already in tmux (only in interactive shells)
-if [[ -n "$PS1" ]] && command -v tmux &> /dev/null && [[ ! "$TERM" =~ screen ]] && [[ ! "$TERM" =~ tmux ]] && [[ -z "$TMUX" ]] && [[ -t 0 ]]; then
+if [[ -n "$PS1" ]] && 
+   command -v tmux &> /dev/null && 
+   [[ ! "$TERM" =~ screen ]] && 
+   [[ ! "$TERM" =~ tmux ]] && 
+   [[ -z "$TMUX" ]] && 
+   [[ -t 0 ]] &&
+   [[ "${NO_TMUX}" != "true" ]]; then
+   
   # Check if we're in an SSH session
   if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
     # SSH session - attach to existing session or create new one
