@@ -1,0 +1,11 @@
+#!/bin/sh
+# filter_output: redact sensitive data from stdin
+# Usage: some_command | filter_output
+#        frun some_command
+
+sed -E \
+  -e "s/[a-zA-Z0-9._%+'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/<REDACTED_EMAIL>/g" \
+  -e "s/[A-Z][a-z]{3,} [A-Z][a-z]{4,}/<REDACTED_NAME>/g" \
+  -e "s/\b[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b/<REDACTED_IP>/g" \
+  -e "s/\b([0-9]{4}[- ]?){3}[0-9]{4}\b/<REDACTED_CARD>/g" \
+  -e "s/(password|passwd|secret|token|api_?key)[[:space:]]*[=:][[:space:]]*[^[:space:]]+/\1=<REDACTED>/gi"

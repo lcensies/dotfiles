@@ -29,6 +29,9 @@ alias n3="nnn"
 
 alias p="python3"
 
+# Filter sensitive output: frun <command> [args...]
+frun() { "$@" | filter_output; }
+
 # Git
 # TODO: change to git aliases
 alias lg="lazygit"
@@ -81,5 +84,10 @@ alias vgd="vagrant destroy"
 alias vb="VBoxManage"
 
 
+# Redacted AI CLIs
+alias opencode="~/.scripts/llm-redacted-command opencode"
+alias cursor-agent="~/.scripts/llm-redacted-command cursor-agent"
+alias omo="~/.scripts/omo"
+
 # Cursor
-alias ca="~/.local/bin/distrobox_exported/cursor-agent"
+alias ca="~/.scripts/llm-redacted-command cursor-agent"

@@ -1,0 +1,32 @@
+#!/bin/bash
+# Git wrapper that redacts sensitive data from git output
+# Filters against phrases in /home/esc/.secrets/private_phrases.txt
+
+# Build sed expressions from private phrases
+PHRASES_FILE="/home/esc/.secrets/private_phrases.txt"
+declare -a sed_args=(-E)
+
+# Add phrases from file (one per line, skip empty lines)
+if [ -f "$PHRASES_FILE" ]; then
+  while IFS= read -r phrase; do
+    [ -z "$phrase" ] && continue
+    # Escape special regex characters in the phrase
+    escaped=$(printf '%s\n' "$phrase" | sed 's/[[\.*^$/\\&]/\\&/g')
+    sed_args+=(-e "s/$escaped/<REDACTED>/g")
+  done < "$PHRASES_FILE"
+fi
+
+# Add standard filter patterns from filter_output
+sed_args+=(
+  -e "s/[a-zA-Z0-9._%+'-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/<REDACTED_EMAIL>/g"
+  -e "s/[A-Z][a-z]{3,} [A-Z][a-z]{4,}/<REDACTED_NAME>/g"
+  -e "s/\b[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\b/<REDACTED_IP>/g"
+  -e "s/\b([0-9]{4}[- ]?){3}[0-9]{4}\b/<REDACTED_CARD>/g"
+  -e "s/(password|passwd|secret|token|api_?key)[[:space:]]*[=:][[:space:]]*[^[:space:]]+/\1=<REDACTED>/gi"
+)
+
+# Run git and pipe both stdout and stderr through sed
+/usr/bin/git.real "$@" 2>&1 | sed "${sed_args[@]}"
+
+# Preserve git's exit code
+exit ${PIPESTATUS[0]}

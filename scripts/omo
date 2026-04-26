@@ -1,0 +1,36 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+
+config_dir="$HOME/.config/opencode"
+config_file="$config_dir/opencode.json"
+install_name="oh-my-opencode"
+plugin_name="oh-my-openagent"
+legacy_plugin_name="oh-my-opencode"
+package_dir="$config_dir/node_modules/$install_name"
+
+if [ -x "$HOME/.scripts/llm-redacted-command" ]; then
+  wrapper="$HOME/.scripts/llm-redacted-command"
+else
+  wrapper="$HOME/.dotfiles/scripts/llm-redacted-command"
+fi
+
+mkdir -p "$config_dir"
+
+if [ ! -d "$package_dir" ]; then
+  printf '%s is not installed in %s\n' "$install_name" "$config_dir" >&2
+  printf 'Install it once with: npm install --prefix %q %q\n' "$config_dir" "$install_name" >&2
+  exit 1
+fi
+
+if [ ! -f "$config_file" ]; then
+  printf '{\n  "$schema": "https://opencode.ai/config.json",\n  "plugin": ["%s"]\n}\n' "$plugin_name" > "$config_file"
+else
+  tmp_file="$(mktemp)"
+  jq --arg plugin "$plugin_name" --arg legacy "$legacy_plugin_name" '
+    .plugin = (((.plugin // []) | map(select(. != $legacy and (. | startswith($legacy + "@") | not)))) + [$plugin] | unique)
+  ' "$config_file" > "$tmp_file"
+  mv "$tmp_file" "$config_file"
+fi
+
+exec "$wrapper" opencode "$@"
