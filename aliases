@@ -1,5 +1,11 @@
 alias l="ls -l"
 alias lf="ls | fzf"
+alias y="yazi"
+
+alias oc="opencode"
+alias w="workmux"
+
+alias cc="calcurse"
 
 
 alias btui="bluetuith"

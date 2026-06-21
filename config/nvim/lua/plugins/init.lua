@@ -73,9 +73,7 @@ local default_plugins = {
 
   {
     "nvim-treesitter/nvim-treesitter",
-    init = function()
-      require("core.utils").lazy_load "nvim-treesitter"
-    end,
+    lazy = false, -- load at startup so config can require() the module (avoids errors when opening a file)
     cmd = { "TSInstall", "TSBufEnable", "TSBufDisable", "TSModuleInfo" },
     build = ":TSUpdate",
     opts = function()
@@ -83,7 +81,16 @@ local default_plugins = {
     end,
     config = function(_, opts)
       dofile(vim.g.base46_cache .. "syntax")
-      require("nvim-treesitter.configs").setup(opts)
+      -- Prepend lazy plugin dir so require() finds the module (Nix env can restrict package.path)
+      local lazy_plugin = vim.fn.stdpath("data") .. "/lazy/nvim-treesitter"
+      local lua_dir = lazy_plugin .. "/lua"
+      if vim.fn.isdirectory(lazy_plugin) == 1 then
+        package.path = lua_dir .. "/?.lua;" .. lua_dir .. "/?/init.lua;" .. package.path
+      end
+      local ok, configs = pcall(require, "nvim-treesitter.configs")
+      if ok and configs then
+        configs.setup(opts)
+      end
     end,
   },
 

@@ -1,4 +1,3 @@
-# Initialize Starship prompt (only if not using Powerlevel10k)
 eval "$(starship init zsh)"
 
 export EDITOR=nvim
@@ -72,6 +71,9 @@ test -d ~/.scripts && export PATH="$PATH:/home/${USER}/.scripts"
 test -d ~/.scripts/priv && export PATH="$PATH:/home/${USER}/.scripts/priv"
 test -d ~/.local/bin && export PATH="$HOME/.local/bin:$PATH"
 test -d ~/.local/bin/distrobox-exported && export PATH="$HOME/.local/bin/distrobox-exported:$PATH"
+test -d ~/.cargo/bin && export PATH="$HOME/.cargo/bin:$PATH"
+
+
 
 # Moving around words with ctrl + Arrow
 # TODO also add vim-like shortcuts
@@ -193,12 +195,13 @@ fi
 
 # Load antidote and plugins only in interactive shells
 if [[ -n "$PS1" ]]; then
+  # Register atuin init BEFORE loading plugins so zsh-vi-mode's zvm_after_init
+  # hook picks it up (zvm fires the hook during its own init inside antidote load)
+  if command -v atuin >/dev/null 2>&1; then
+    zvm_after_init_commands+=('eval "$(atuin init zsh)"; bindkey "^r" atuin-search')
+  fi
+
   source ~/.antidote/antidote.zsh
   antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins
-  
-  # Initialize atuin after plugins are loaded to avoid keybinding conflicts
-  if command -v atuin >/dev/null 2>&1; then
-    eval "$(atuin init zsh)"
-  fi
 fi
 #

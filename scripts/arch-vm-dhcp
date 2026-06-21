@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# Re-attach NIC on archlinux VM to trigger DHCP in guest; show commands to run inside VM.
+VM=archlinux
+MAC=52:54:00:6e:7f:04
+
+if ! virsh list --all --name | grep -qx "$VM"; then
+  echo "VM $VM not found."
+  exit 1
+fi
+
+if virsh list --state-running --name | grep -qx "$VM"; then
+  echo "Reattaching NIC..."
+  virsh detach-interface "$VM" network --mac "$MAC" --live --config
+  sleep 2
+  virsh attach-interface "$VM" network default --model e1000 --mac "$MAC" --live --config
+  echo "Check: virsh net-dhcp-leases default"
+fi
+
+echo ""
+echo "If still no IP, run INSIDE the Arch VM:"
+echo "  ip link"
+echo "  sudo ip link set eth0 up"
+echo "  sudo dhcpcd eth0"
+echo "  ip addr"
