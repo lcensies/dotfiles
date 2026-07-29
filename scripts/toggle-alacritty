@@ -1,0 +1,51 @@
+#!/usr/bin/env bash
+# Toggle a floating alacritty dropdown terminal via window-calls GNOME extension.
+# Persists window ID to /tmp so minimized windows (absent from List()) can still be raised.
+
+WM_CLASS="dropdown-alacritty"
+DBUS="org.gnome.Shell.Extensions.Windows"
+DBUS_PATH="/org/gnome/Shell/Extensions/Windows"
+WID_FILE="/tmp/toggle-alacritty.wid"
+
+call() {
+    gdbus call --session --dest org.gnome.Shell \
+        --object-path "$DBUS_PATH" --method "$DBUS.$1" "${@:2}" 2>/dev/null
+}
+
+list=$(call List)
+json=$(echo "$list" | sed "s/^('//;s/',)\$//")
+
+win=$(echo "$json" | jq -r --arg cls "$WM_CLASS" \
+    '.[] | select(.wm_class == $cls or .wm_class_instance == $cls) | {id, focus} | @base64' | head -1)
+
+if [[ -n "$win" ]]; then
+    id=$(echo "$win" | base64 -d | jq -r '.id')
+    focused=$(echo "$win" | base64 -d | jq -r '.focus')
+    echo "$id" > "$WID_FILE"
+
+    if [[ "$focused" == "true" ]]; then
+        call Minimize "uint32 $id"
+    else
+        # MakeAbove forces it past focus-stealing prevention, then activate
+        call MakeAbove "uint32 $id"
+        call Unminimize "uint32 $id"
+        call Activate "uint32 $id"
+        call UnmakeAbove "uint32 $id"
+    fi
+    exit 0
+fi
+
+# Window not in List() — likely minimized. Try the stored ID.
+stored_id=$(cat "$WID_FILE" 2>/dev/null)
+if [[ -n "$stored_id" ]]; then
+    if call Unminimize "uint32 $stored_id"; then
+        call MakeAbove "uint32 $stored_id"
+        call Activate "uint32 $stored_id"
+        call UnmakeAbove "uint32 $stored_id"
+        exit 0
+    fi
+    rm -f "$WID_FILE"
+fi
+
+# No existing window — launch fresh.
+alacritty --class "$WM_CLASS" -e mgmt tui --view day &

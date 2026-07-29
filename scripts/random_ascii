@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+cat /dev/urandom | tr -dc 'A-Za-z0-9' | head -c32; echo
+

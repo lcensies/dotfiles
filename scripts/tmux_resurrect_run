@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Relaunch helper for tmux-resurrect (see @resurrect-processes in ~/.tmux.conf).
+#
+# tmux-resurrect only replays the command line a pane was running, which for an
+# editor or an AI coding agent means a blank session. This wraps the relaunch so
+# the pane comes back on the conversation/buffers it had before the reboot.
+#
+# Usage: tmux_resurrect_run <tool> [original args...]
+
+set -u
+
+tool="${1:?usage: tmux_resurrect_run <tool> [args...]}"
+shift
+
+# The pane already asked for a specific session -- replay it untouched.
+has_session_flag() {
+	local arg
+	for arg in "$@"; do
+		case "$arg" in
+		-c | --continue | -r | --resume | -s | --session | --session-id | --fork | --no-session)
+			return 0
+			;;
+		esac
+	done
+	return 1
+}
+
+# `--continue` exits right away when the directory has no previous session.
+# Distinguish that from the agent running fine and the user quitting it.
+run_with_continue() {
+	local start=$SECONDS
+	"$tool" --continue "$@"
+	local rc=$?
+	if [ "$rc" -ne 0 ] && [ $((SECONDS - start)) -lt 5 ]; then
+		exec "$tool" "$@"
+	fi
+	return "$rc"
+}
+
+case "$tool" in
+claude | pi | opencode)
+	if has_session_flag "$@"; then
+		exec "$tool" "$@"
+	fi
+	run_with_continue "$@"
+	;;
+nvim)
+	# LazyVim ships persistence.nvim, which keeps one session per cwd.
+	# load() is a no-op when the current directory has none.
+	exec nvim -c 'lua pcall(function() require("persistence").load() end)'
+	;;
+*)
+	exec "$tool" "$@"
+	;;
+esac
