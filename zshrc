@@ -4,6 +4,8 @@ export EDITOR=nvim
 export VISUAL=nvim
 export LIBVIRT_DEFAULT_URI=qemu:///system
 
+
+
 # Load completions (optimized)
 autoload -Uz compinit
 # Only run compinit once per day unless .zcompdump is older than 24 hours
@@ -108,6 +110,103 @@ bindkey "^[[1;5D" backward-word
 # esac
 
 
+# ── Orca / tmux integration ─────────────────────────────────────────────
+# Orca terminals get a session per project and a window per worktree
+# (orca worktree layout: <project>__worktrees/<worktree>), so multiple
+# orca panes don't fight over the shared "local" session.
+
+# True if this shell was spawned by the orca-ide daemon (process ancestry)
+_orca_launched() {
+  local pid=$PPID i
+  for i in {1..5}; do
+    [[ "$(ps -o comm= -p "$pid" 2>/dev/null)" == "orca-ide" ]] && return 0
+    pid=$(ps -o ppid= -p "$pid" 2>/dev/null | tr -d ' ')
+    [[ -z "$pid" || "$pid" -le 1 ]] && return 1
+  done
+  return 1
+}
+
+# exec into the project session, focused on this worktree's window.
+# Orca terminals live on their own tmux server (-L orca, own config):
+# local plugins (sessionx kill, resurrect/continuum saves) never touch
+# orca sessions, and orca policy (detach-on-destroy on) is global there.
+_orca_tmux() {
+  local proj win base s n
+  local -a busy T
+  T=(tmux -L orca -f "$HOME/.dotfiles/tmux/orca.conf")
+  if [[ "$PWD" == *__worktrees/* ]]; then
+    proj=${${PWD%%__worktrees/*}:t}
+    win=${${PWD##*__worktrees/}%%/*}
+  else
+    proj=${PWD:t}
+    win=main
+  fi
+  # Sanitize to a tmux-target-safe charset: `.`/`:` are target separators,
+  # whitespace breaks the busy-scan word split
+  proj=${proj//[^[:alnum:]_-]/_}
+  win=${win//[^[:alnum:]_-]/_}
+  # GC grouped sessions leaked by a crash in the create→attach gap (they
+  # have no destroy-unattached yet, see below) — live ones are always
+  # attached, so unattached + older than 10s == leaked
+  local cutoff=$(( $(date +%s) - 10 ))
+  "${T[@]}" list-sessions -F '#{session_group} #{session_name} #{session_attached} #{session_created}' 2>/dev/null |
+    while read -r g s att created; do
+      [[ "$g" == "$proj" && "$s" != "$proj" && "$att" == 0 && "$created" -lt "$cutoff" ]] &&
+        "${T[@]}" kill-session -t "=$s" 2>/dev/null
+    done
+  # Orca sends keystrokes to the pty, which land on that client's ACTIVE
+  # window — so two orca terminals must never sit on the same window, or
+  # `orca terminal send` to one types into the other. Windows held by
+  # other grouped sessions are busy; take the next -N suffix.
+  # ponytail: not atomic — two shells spawning in the same instant can
+  # still pick the same window; claim via tmux wait-for lock if it bites
+  for s in $("${T[@]}" list-sessions -F '#{session_group} #{session_name}' 2>/dev/null |
+             awk -v g="$proj" '$1==g && $2!=g {print $2}'); do
+    busy+=("$("${T[@]}" list-windows -t "=$s" -F '#{window_active} #{window_name}' 2>/dev/null |
+              awk '$1==1 {sub(/^1 /,""); print; exit}')")
+  done
+  base=$win n=1
+  while (( ${busy[(Ie)$win]} )); do (( n++ )); win="$base-$n"; done
+  # Forward Orca identity into the window shell: tmux panes inherit server
+  # env, not the invoking shell's, so without -e a second orca pane would
+  # run under the first pane's ORCA_TERMINAL_HANDLE (or none at all)
+  "${T[@]}" has-session -t "=$proj" 2>/dev/null ||
+    "${T[@]}" new-session -d -s "$proj" -n "$win" -c "$PWD" \
+      -e ORCA_TERMINAL_HANDLE="$ORCA_TERMINAL_HANDLE" -e ORCA_PANE_KEY="$ORCA_PANE_KEY"
+  "${T[@]}" list-windows -t "=$proj" -F '#W' | grep -qxF -- "$win" ||
+    "${T[@]}" new-window -d -t "=$proj" -n "$win" -c "$PWD" \
+      -e ORCA_TERMINAL_HANDLE="$ORCA_TERMINAL_HANDLE" -e ORCA_PANE_KEY="$ORCA_PANE_KEY"
+  # Stamp this terminal's identity on the window (window-scoped user
+  # options) — on window reuse the pane's old shell has stale ORCA_* env;
+  # _orca_refresh_env re-reads these each prompt
+  "${T[@]}" set-option -w -t "=$proj:$win" @orca_handle "$ORCA_TERMINAL_HANDLE" \; \
+    set-option -w -t "=$proj:$win" @orca_pane_key "$ORCA_PANE_KEY" 2>/dev/null
+  # Grouped throwaway session so each orca pane focuses its own window
+  # independently. Created detached + focused first so it marks the window
+  # busy for the next spawn before we even attach.
+  "${T[@]}" new-session -d -t "=$proj" -s "$proj-$$" \; \
+    select-window -t "=$proj-$$:$win"
+  # destroy-unattached only AFTER attach: set earlier, any client death on
+  # the server sweeps the not-yet-attached session and attach fails with
+  # "can't find session" (hits every app-quit→reopen pty respawn burst).
+  # Per-session, not in orca.conf: a global would reap the unattached base
+  # sessions that carry persistence.
+  exec "${T[@]}" attach-session -t "=$proj-$$" \; \
+    set-option destroy-unattached on
+}
+
+# Refresh ORCA_* env from window-scoped options: a reused window's shell
+# outlives the orca terminal that spawned it, so its handle goes stale
+# until the next attach stamps the window (see _orca_tmux)
+_orca_refresh_env() {
+  local out h k
+  out=$(tmux display-message -p '#{@orca_handle}::#{@orca_pane_key}' 2>/dev/null) || return
+  h=${out%%::*} k=${out##*::}
+  [[ -n "$h" && "$h" != "$ORCA_TERMINAL_HANDLE" ]] && export ORCA_TERMINAL_HANDLE="$h"
+  [[ -n "$k" && "$k" != "$ORCA_PANE_KEY" ]] && export ORCA_PANE_KEY="$k"
+}
+[[ -n "$TMUX" ]] && precmd_functions+=(_orca_refresh_env)
+
 # Enter tmux if it's present and not already in tmux (only in interactive shells)
 if [[ -n "$PS1" ]] && 
    command -v tmux &> /dev/null && 
@@ -121,6 +220,8 @@ if [[ -n "$PS1" ]] &&
   if [[ -n "$SSH_CLIENT" ]] || [[ -n "$SSH_TTY" ]]; then
     # SSH session - attach to existing session or create new one
     exec tmux new-session -A -s ssh
+  elif _orca_launched; then
+    _orca_tmux
   else
     # Local session - attach to existing session or create new one
     exec tmux new-session -A -s local
@@ -205,3 +306,4 @@ if [[ -n "$PS1" ]]; then
   antidote load ${ZDOTDIR:-$HOME}/.zsh_plugins
 fi
 #
+eval "$(direnv hook zsh)"

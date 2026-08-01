@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+# Orca "Open in" launcher: Orca spawns this detached (no TTY) with a worktree
+# dir or a single file as the only arg, so nvim brings its own terminal.
+if [ -d "$1" ]; then
+  exec kitty --directory "$1" nvim .
+else
+  exec kitty --directory "$(dirname "$1")" nvim "$1"
+fi

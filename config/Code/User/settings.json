@@ -8,4 +8,9 @@
         "fedora": "linux"
     },
     "git.confirmSync": false,
+    "terminal.integrated.commandsToSkipShell": [
+        "kilo-code.new.agentManagerOpen",
+        "kilo-code.new.agentManager.showTerminal"
+    ],
+    "kilo-code.new.autocomplete.enableAutoTrigger": false,
 }
