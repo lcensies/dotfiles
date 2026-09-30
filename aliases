@@ -4,6 +4,10 @@ alias y="yazi"
 
 alias oc="opencode"
 alias w="workmux"
+# Corp pi: launches pi under the `corp` agent-profile overlay (adds the LiteLLM
+# provider plugin). Base `pi` stays litellm-free. Global --profile must precede
+# the subcommand; trailing args after `pi` pass through.
+alias cpi="workmux --profile corp exec pi"
 
 alias m="mgmt"
 
@@ -99,3 +103,10 @@ alias omo="~/.scripts/omo"
 
 # Cursor
 alias ca="~/.scripts/llm-redacted-command cursor-agent"
+
+# Ad-hoc cgroup limiting; cargo/nix-shell/claude auto-wrapped via ~/.scripts/climit-wrappers PATH shims
+climit() {
+  systemd-run --user --scope -q \
+    -p MemoryHigh="${BUILD_MEM:-70%}" -p MemoryMax="${BUILD_MEM_MAX:-80%}" \
+    -p CPUQuota="${BUILD_CPU:-600%}" "$@"
+}

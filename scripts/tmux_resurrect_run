@@ -29,18 +29,31 @@ has_session_flag() {
 # Distinguish that from the agent running fine and the user quitting it.
 run_with_continue() {
 	local start=$SECONDS
-	"$tool" --continue "$@"
+	"${runner[@]}" --continue "$@"
 	local rc=$?
 	if [ "$rc" -ne 0 ] && [ $((SECONDS - start)) -lt 5 ]; then
-		exec "$tool" "$@"
+		exec "${runner[@]}" "$@"
 	fi
 	return "$rc"
 }
 
+# `cpi` is `workmux --profile corp exec pi`, and workmux execs the very same pi
+# binary, so the saved pane looks identical to a plain `pi` one. Pick by cwd,
+# mirroring the `cpi` entry in agent_rules of ~/.config/workmux/config.yaml.
+# ponytail: rule duplicated here; read it from the workmux config if it grows.
+runner=("$tool")
+if [ "$tool" = pi ]; then
+	case "$PWD" in
+	"$HOME"/repos/work | "$HOME"/repos/work/*)
+		runner=(workmux --profile corp exec pi)
+		;;
+	esac
+fi
+
 case "$tool" in
 claude | pi | opencode)
 	if has_session_flag "$@"; then
-		exec "$tool" "$@"
+		exec "${runner[@]}" "$@"
 	fi
 	run_with_continue "$@"
 	;;

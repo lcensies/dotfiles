@@ -1,3 +1,6 @@
+# home-manager sessionVariables (not auto-sourced: .zshrc is dotfile-managed, programs.zsh off)
+[ -f /etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh ] && source /etc/profiles/per-user/$USER/etc/profile.d/hm-session-vars.sh
+
 eval "$(starship init zsh)"
 
 export EDITOR=nvim
@@ -74,6 +77,8 @@ test -d ~/.scripts/priv && export PATH="$PATH:/home/${USER}/.scripts/priv"
 test -d ~/.local/bin && export PATH="$HOME/.local/bin:$PATH"
 test -d ~/.local/bin/distrobox-exported && export PATH="$HOME/.local/bin/distrobox-exported:$PATH"
 test -d ~/.cargo/bin && export PATH="$HOME/.cargo/bin:$PATH"
+# cgroup-limit shims — must stay first in PATH, after all other prepends
+test -d ~/.scripts/climit-wrappers && export PATH="$HOME/.scripts/climit-wrappers:$PATH"
 
 
 

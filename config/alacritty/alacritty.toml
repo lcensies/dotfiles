@@ -25,29 +25,38 @@ working_directory = "None"
 
 [terminal]
 
+# Palette copied from kitty's stylix theme (~/.config/kitty/theme.conf)
 [colors.bright]
-black = "#928374"
-blue = "#83a598"
-cyan = "#8ec07c"
-green = "#b8bb26"
-magenta = "#d3869b"
-red = "#fb4934"
-white = "#ebdbb2"
-yellow = "#fabd2f"
+black = "#08052B"
+red = "#FF7F7F"
+green = "#7F5DBF"
+yellow = "#CC3980"
+blue = "#7FBAFF"
+magenta = "#7F3FBF"
+cyan = "#7F7FFF"
+white = "#CDCEDB"
 
 [colors.normal]
-black = "#282828"
-blue = "#458588"
-cyan = "#689d6a"
-green = "#98971a"
-magenta = "#b16286"
-red = "#cc241d"
-white = "#a89984"
-yellow = "#d79921"
+black = "#08052B"
+red = "#FF7F7F"
+green = "#7F5DBF"
+yellow = "#CC3980"
+blue = "#7FBAFF"
+magenta = "#7F3FBF"
+cyan = "#7F7FFF"
+white = "#CDCEDB"
 
 [colors.primary]
-background = "#282828"
-foreground = "#ebdbb2"
+background = "#08052B"
+foreground = "#E3E3EA"
+
+[colors.cursor]
+cursor = "#E3E3EA"
+text = "#08052B"
+
+[colors.selection]
+background = "#08052B"
+foreground = "#FFFFFF"
 
 [cursor]
 thickness = 0.15
@@ -64,19 +73,19 @@ TERM = "alacritty"
 size = 13
 
 [font.bold]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font"
 style = "Bold"
 
 [font.bold_italic]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font"
 style = "Bold Italic"
 
 [font.italic]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font"
 style = "Italic"
 
 [font.normal]
-family = "JetBrains Mono"
+family = "JetBrainsMono Nerd Font"
 style = "Regular"
 
 

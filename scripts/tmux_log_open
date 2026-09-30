@@ -1,0 +1,77 @@
+#!/usr/bin/env bash
+# prefix+o: open a file whose path is printed in the current tmux pane.
+#
+# The pane text is already the index of what to look at: pi's unified-exec
+# prints `log_path: /tmp/pi-unified-exec-<n>-<hex>.log` per command, and tool
+# output is full of source paths. Newest match first, fzf picks when several
+# exist, and the popup viewer depends on the file:
+#   *.log  -> less +F (follow live; Ctrl-C browse, F resume, q close)
+#   other  -> $VISUAL/$EDITOR, else less
+# Relative paths are resolved against the pane's cwd; `~` is expanded.
+set -euo pipefail
+
+self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+
+# Rank tiers, stable within a tier so newest-on-screen still wins:
+#   0 unified-exec logs (what prefix+o is for), 1 other logs, 2 everything else.
+rank_paths() {
+	awk '{
+		rank = 2
+		if ($0 ~ /\.log$/) rank = 1
+		if ($0 ~ /pi-unified-exec-[0-9]+-[0-9a-f]+\.log$/) rank = 0
+		printf "%d\t%s\n", rank, $0
+	}' | sort -s -k1,1n | cut -f2-
+}
+
+# Path-ish tokens (must contain a slash — bare words are too noisy), deduped,
+# last-seen first, only those that resolve to an existing file.
+extract_paths() { # extract_paths [base_dir]
+	local base="${1:-$PWD}" p q
+	# `|| true`: no match is the empty-result case, not an error (pipefail).
+	{ grep -oE '[~./A-Za-z0-9_][^[:space:]"'\''`(),:;]*/[^[:space:]"'\''`(),:;]+' || true; } |
+		awk '!seen[$0]++' | tac |
+		while IFS= read -r p; do
+			q="${p/#\~/$HOME}"
+			[[ $q == /* ]] || q="$base/$q"
+			# `if`, not `&&`: a failing last iteration would fail the function.
+			if [ -f "$q" ]; then printf '%s\n' "$q"; fi
+		done | rank_paths
+}
+
+case "${1-}" in
+--extract) # test hook: pane text on stdin -> candidate list on stdout
+	extract_paths "${2-}"
+	exit 0
+	;;
+--popup) # runs inside display-popup
+	list="$2"
+	trap 'rm -f "$list"' EXIT
+	if [ "$(wc -l <"$list")" -gt 1 ] && command -v fzf >/dev/null; then
+		sel="$(fzf --prompt='open> ' --height=100% --preview='tail -100 {}' <"$list")" || exit 0
+	else
+		sel="$(head -1 "$list")"
+	fi
+	[ -n "$sel" ] || exit 0
+	rm -f "$list"
+	trap - EXIT
+	# Logs are live: follow them. Anything else is for reading/editing.
+	case "$sel" in
+	*.log | *.log.*) exec less +F -R -- "$sel" ;;
+	*) exec ${VISUAL:-${EDITOR:-less}} "$sel" ;;
+	esac
+	;;
+esac
+
+pane="${1:-}"
+base="$(tmux display -p ${pane:+-t "$pane"} '#{pane_current_path}')"
+list="$(mktemp)"
+tmux capture-pane -p -J -S "-${TMUX_LOG_SCROLLBACK:-5000}" ${pane:+-t "$pane"} |
+	extract_paths "$base" >"$list"
+
+if [ ! -s "$list" ]; then
+	rm -f "$list"
+	tmux display-message "no existing file path in this pane"
+	exit 0
+fi
+
+tmux display-popup -E -w 90% -h 85% "$self --popup $(printf '%q' "$list")"

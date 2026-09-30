@@ -1,0 +1,9 @@
+#!/bin/sh
+# cgroup-limit wrapper. Symlink command names to this file; dir is PATH-prepended in zshrc.
+# Strips own dir from PATH to find the real binary (no recursion).
+d=$(cd "$(dirname "$0")" && pwd)
+PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vFx "$d" | paste -sd:)
+export PATH
+exec systemd-run --user --scope -q \
+  -p MemoryHigh="${BUILD_MEM:-70%}" -p MemoryMax="${BUILD_MEM_MAX:-80%}" \
+  -p CPUQuota="${BUILD_CPU:-600%}" "$(basename "$0")" "$@"

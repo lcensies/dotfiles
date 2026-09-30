@@ -26,7 +26,12 @@ local plugins = {
     opts = {
       -- lsp_fallback = true,
       lsp_fallback = true,
-      format_on_save = { lsp_fallback = true },
+      format_on_save = function(bufnr)
+        if vim.api.nvim_buf_get_name(bufnr):match("slides%.md$") then
+          return
+        end
+        return { lsp_fallback = true }
+      end,
       formatters_by_ft = {
         lua = { "stylua" },
         python = { "isort", "black" },
