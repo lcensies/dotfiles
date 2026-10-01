@@ -59,6 +59,22 @@ Example — destructive op:
 > ```
 > Caveman resume. Verify backup exist first.
 
+# CodeGraph
+
+In a git repo, structural questions — how X works, how X reaches Y, what breaks
+if X changes — go to CodeGraph before any grep/read loop. It is a prebuilt index
+of the repo, so the loop repeats work already done. `codegraph_explore` answers
+most of them in one call; the `codegraph` skill has the CLI equivalents for
+agents and subagents without those tools.
+
+- Text search is not its job. A literal string, a config value, a TODO is an fff
+  job, and symbol search matches declarations rather than source text.
+- Treat returned source as read. Don't re-grep to confirm it.
+- A staleness banner names a file whose edits are not in the graph yet — read
+  that file directly instead of re-running the query.
+- "Not initialized" means the session-ready hook skipped this repo. Use fff and
+  read, or ask first — `codegraph init -y` costs minutes on a cold repo.
+
 For any file search or grep in the current git-indexed directory, use fff tools (find_files, grep, multi_grep) instead of Bash find/grep commands.
 
 In a colocated repo (`.jj/` beside `.git/`), `jj` and `git` are **one repo, two interfaces** — not a choice. Use `jj` for the work; the commits it makes *are* git commits. Load the `jujutsu` skill before driving jj.
@@ -141,4 +157,40 @@ Rules:
   fix, or you already have the context. Recon on a known location is waste.
 
 Before finishing, review the code comments you wrote and deslop them: make them concise, delete comments that restate what the code already says, and avoid explaining obvious concepts. Keep comments that explain caveats, non-obvious constraints, or why the code is the way it is — those stay, in full.
+
+# The shell you run in is wrapped
+
+Your `exec_command` shell is wrapped by llm-redactor, which exports an HTTP(S)
+proxy and four CA-bundle variables. Anything doing TLS from Node or Python —
+`npm`, `pip`, `gh`, `curl` against a public registry — can fail with
+`UNABLE_TO_GET_ISSUER_CERT_LOCALLY` or hang on the proxy. That is the wrapper,
+not the network, and not a reason to abandon the approach.
+
+Strip them for that one command:
+
+```sh
+env -u http_proxy -u https_proxy -u HTTP_PROXY -u HTTPS_PROXY \
+    -u NODE_EXTRA_CA_CERTS -u SSL_CERT_FILE -u CURL_CA_BUNDLE -u REQUESTS_CA_BUNDLE \
+    npm i --no-save
+```
+
+Never strip them for a call to a model/API endpoint — the redactor is there on
+purpose.
+
+Evidence: 2026-10-01, ~/repos/harness — `npm view pi-continual-harness` burned
+three rounds on `UNABLE_TO_GET_ISSUER_CERT_LOCALLY` before the user said "if you
+have issue with ssl - check in second pane".
+
+# "check the other pane" means tmux
+
+The user's interactive panes are *not* wrapped, so a command that fails for you
+may plainly work for them. When they point at a pane, read it instead of asking
+which one:
+
+```sh
+tmux list-panes -a -F '#{window_index}.#{pane_index} #{pane_id} #{pane_current_command} #{pane_current_path}'
+tmux capture-pane -p -t %20 -S -60
+```
+
+Your own pane is the one running `llm-redactor-exec` in the session's cwd.
 <!-- workmux-bootstrap-end -->

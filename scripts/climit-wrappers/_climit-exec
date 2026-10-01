@@ -4,6 +4,9 @@
 d=$(cd "$(dirname "$0")" && pwd)
 PATH=$(printf '%s' "$PATH" | tr ':' '\n' | grep -vFx "$d" | paste -sd:)
 export PATH
+# No user bus (sudo, cron, system units): systemd-run --user aborts before running
+# anything, so fall through to the real binary unlimited.
+[ -S "${XDG_RUNTIME_DIR:-/nonexistent}/bus" ] || exec "$(basename "$0")" "$@"
 exec systemd-run --user --scope -q \
   -p MemoryHigh="${BUILD_MEM:-70%}" -p MemoryMax="${BUILD_MEM_MAX:-80%}" \
   -p CPUQuota="${BUILD_CPU:-600%}" "$(basename "$0")" "$@"

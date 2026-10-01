@@ -1,0 +1,5 @@
+{
+  "title": "workmux: open worktree",
+  "command": "workmux project list | while read -r n p; do [ -d \"$p\" ] || continue; (cd \"$p\" && workmux ls --json 2>/dev/null) | jq -c --arg n \"$n\" --arg p \"$p\" '[.[] | {title: ($n + \"/\" + .handle), description: (.branch + (if .is_open then \" · open\" else \"\" end)), action: {shell: (\"cd \" + ($p|@sh) + \" && workmux open \" + (.handle|@sh))}}]'; done | jq -s 'add // []'",
+  "emptyText": "no worktrees - track a project with `workmux project add`"
+}

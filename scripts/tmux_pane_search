@@ -1,0 +1,92 @@
+#!/usr/bin/env bash
+# Fuzzy-search the scrollback of every tmux pane, jump to the hit in copy mode.
+#
+# Replaces tmux-palette's built-in "Find Pane", which only matched pane/window
+# titles — this matches what the pane printed. Ranking is fzf's fuzzy score
+# first, input order second (--tiebreak=index): panes ordered by last output,
+# newest line first within a pane. tmux has no per-pane activity format and
+# #{window_activity} is identical across all windows here, so "last output" is
+# the pane tty's mtime.
+#
+# Opens its own tmux popup (needs a terminal for fzf). Inside a popup both
+# #{client_name} and -t still resolve to the invoking client/pane, so
+# switch-client works without -c.
+set -euo pipefail
+
+self="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/$(basename "${BASH_SOURCE[0]}")"
+lines_per_pane="${TMUX_PANE_SEARCH_LINES:-5000}"
+
+# pane_id \t up \t session \t "<target> <command> | <text>"
+#
+# `up` is the cursor-up count copy-mode needs: grid lines from the bottom of the
+# pane to the match. capture-pane drops trailing blank rows, so pad `up` by the
+# rows it dropped (requested window minus rows returned).
+candidates() {
+	tmux list-panes -a -F '#{pane_id}	#{pane_tty}	#{session_name}	#{session_name}:#{window_index}.#{pane_index}	#{pane_current_command}	#{history_size}	#{pane_height}' |
+		while IFS=$'\t' read -r id tty sess target cmd hist height; do
+			printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+				"$(stat -c %Y "$tty" 2>/dev/null || echo 0)" \
+				"$id" "$sess" "$target" "$cmd" "$hist" "$height"
+		done | sort -rn |
+		while IFS=$'\t' read -r _ id sess target cmd hist height; do
+			want=$(((hist < lines_per_pane ? hist : lines_per_pane) + height))
+			# A dead pane between list-panes and capture-pane is not an error.
+			tmux capture-pane -p -t "$id" -S "-$lines_per_pane" -E "$((height - 1))" 2>/dev/null |
+				awk -v id="$id" -v sess="$sess" -v label="$target $cmd" -v want="$want" '
+					{ n++; l[n] = $0 }
+					END {
+						pad = want - n
+						if (pad < 0) pad = 0
+						for (i = n; i >= 1; i--)
+							if (l[i] ~ /[^[:space:]]/)
+								printf "%s\t%d\t%s\t%s | %s\n", id, n - i + pad, sess, label, l[i]
+					}'
+		done
+}
+
+case "${1-}" in
+--candidates) # test hook
+	candidates
+	exit 0
+	;;
+--preview) # --preview <pane_id> <up>
+	id="$2" up="$3"
+	read -r height hist < <(tmux display -p -t "$id" '#{pane_height} #{history_size}')
+	# capture-pane coordinates: 0 = top visible row, negative = history.
+	mid=$((height - 1 - up))
+	start=$((mid - 10)) end=$((mid + 10))
+	((start < -hist)) && start=$((-hist))
+	((end > height - 1)) && end=$((height - 1))
+	tmux capture-pane -p -e -t "$id" -S "$start" -E "$end"
+	exit 0
+	;;
+esac
+
+# tmux-palette's { popup } action relaunches the palette when the popup closes,
+# which would pop it back over the pane we just jumped to. So the palette entry
+# is a { shell } action (run by the palette wrapper after its own popup is gone)
+# and the popup is ours.
+if [ "${1-}" != "--popup" ]; then
+	exec tmux display-popup -E -w 90% -h 85% "$(printf '%q' "$self") --popup"
+fi
+
+if ! command -v fzf >/dev/null; then
+	tmux display-message "tmux_pane_search: fzf not installed"
+	exit 0
+fi
+
+sel="$(candidates | fzf \
+	--delimiter=$'\t' --with-nth=4.. --tiebreak=index \
+	--prompt='pane content> ' --height=100% --no-multi \
+	--preview "$(printf '%q' "$self") --preview {1} {2}" \
+	--preview-window=down,12)" || exit 0
+[ -n "$sel" ] || exit 0
+
+IFS=$'\t' read -r id up sess _ <<<"$sel"
+tmux select-pane -t "$id"
+tmux select-window -t "$id"
+tmux switch-client -t "$sess"
+tmux copy-mode -t "$id"
+if [ "$up" -gt 0 ]; then
+	tmux send-keys -X -t "$id" -N "$up" cursor-up
+fi

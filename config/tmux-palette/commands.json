@@ -1,0 +1,97 @@
+[
+  {
+    "icon": "󰍉",
+    "title": "Find Pane by Content",
+    "description": "fuzzy-search every pane's scrollback, jump to the line",
+    "category": "Panes",
+    "aliases": [
+      "find pane",
+      "search panes",
+      "grep panes",
+      "scrollback"
+    ],
+    "action": {
+      "shell": "~/.dotfiles/scripts/tmux_pane_search"
+    }
+  },
+  {
+    "title": "workmux: Open Worktree...",
+    "description": "switch to a worktree of any tracked project",
+    "category": "workmux",
+    "aliases": [
+      "worktree",
+      "wm open"
+    ],
+    "action": {
+      "palette": "workmux-open"
+    }
+  },
+  {
+    "title": "workmux: Add Worktree",
+    "description": "new worktree + window in the current project",
+    "category": "workmux",
+    "aliases": [
+      "wm add",
+      "new worktree"
+    ],
+    "action": {
+      "tmux": "command-prompt -p 'new worktree:' \"send-keys 'workmux add %1' Enter\""
+    }
+  },
+  {
+    "title": "workmux: Close Window",
+    "description": "close this worktree's window, keep worktree + branch",
+    "category": "workmux",
+    "aliases": [
+      "wm close"
+    ],
+    "action": {
+      "tmux": "send-keys 'workmux close' Enter"
+    }
+  },
+  {
+    "title": "workmux: Dashboard",
+    "description": "TUI status of all active agents",
+    "category": "workmux",
+    "aliases": [
+      "wm dash",
+      "agents"
+    ],
+    "action": {
+      "popup": "workmux dashboard"
+    }
+  },
+  {
+    "title": "workmux: Toggle Sidebar",
+    "description": "live agent status pane in this window",
+    "category": "workmux",
+    "aliases": [
+      "wm sidebar"
+    ],
+    "action": {
+      "tmux": "run-shell -b 'workmux sidebar'"
+    }
+  },
+  {
+    "title": "workmux: Resurrect",
+    "description": "restore worktree windows after a tmux/computer crash",
+    "category": "workmux",
+    "aliases": [
+      "wm resurrect"
+    ],
+    "action": {
+      "tmux": "send-keys 'workmux resurrect' Enter"
+    }
+  },
+  {
+    "title": "workmux: Start Projects",
+    "description": "session per tracked project, window per worktree",
+    "category": "workmux",
+    "aliases": [
+      "wm start"
+    ],
+    "action": {
+      "tmux": "send-keys 'workmux start' Enter"
+    }
+  }
+]
